@@ -21,6 +21,7 @@ const schema = yup.object({
 
 export default function LoginForm() {
   const [err, setErr] = useState<string>();
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const router = useRouter();
   const {
     register,
@@ -35,6 +36,7 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (data: FormValues) => {
+    setIsDisabled(true);
     const status = await signIn("credentials", {
       redirect: false,
       email: data.email,
@@ -44,10 +46,12 @@ export default function LoginForm() {
 
     if (status?.error) {
       setErr(status?.error);
+      setIsDisabled(false);
     }
 
     if (status?.ok) {
       router.push("/");
+      setIsDisabled(false);
     }
   };
 
@@ -86,9 +90,10 @@ export default function LoginForm() {
         {err && <p className="text-error">{err}</p>}
         <button
           type="submit"
+          disabled={isDisabled}
           className="bg-blue-700 text-white font-semibold rounded-lg shadow-sm mt-6 h-12"
         >
-          Login
+          {isDisabled ? "Logging in..." : "Login"}
         </button>
       </form>
       <button

@@ -1,5 +1,10 @@
 import RegisterForm from "@/components/RegisterForm";
 
+export const metadata = {
+  title: "Stack-QA | Register",
+  description: "created by Arka Barua",
+};
+
 export default function Register() {
   return (
     <div className="flex flex-col justify-start items-center min-h-screen text-gray-700">

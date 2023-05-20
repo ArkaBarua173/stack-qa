@@ -5,11 +5,13 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 type FormValues = {
   name: string;
   email: string;
   password: string;
+  confirmPassword: string;
 };
 
 const schema = yup.object({
@@ -28,9 +30,17 @@ const schema = yup.object({
     .max(10)
     .matches(/\d/, "Password must have a number")
     .matches(/^\S*$/, "White Spaces are not allowed"),
+  confirmPassword: yup
+    .string()
+    .required("Confirm password is required")
+    .oneOf([yup.ref("password")], "Passwords must match"),
 });
 
 export default function RegisterForm() {
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [show, setShow] = useState("password");
+  const [cpType, setCpType] = useState("password");
+  const [err, setErr] = useState("");
   const router = useRouter();
   const {
     register,
@@ -41,22 +51,30 @@ export default function RegisterForm() {
       name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
     resolver: yupResolver(schema),
   });
 
   const onSubmit = async (data: FormValues) => {
-    console.log(data);
-
+    setIsDisabled(true);
     await fetch("/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) router.push("/auth/login");
-      });
+      .then(async (res) => {
+        if (res.ok) {
+          router.push("/auth/login");
+        }
+        return res.json();
+      })
+      .then((data) => setErr(data?.message))
+      .catch((err) => {
+        console.log(err);
+        setIsDisabled(false);
+      })
+      .finally(() => setIsDisabled(false));
   };
 
   return (
@@ -71,7 +89,7 @@ export default function RegisterForm() {
           className="w-full border border-gray-300 rounded-lg shadow-sm"
         />
         {errors.name?.message && (
-          <p className="text-red-700">{errors.name?.message}</p>
+          <p className="text-red-700 pt-1">{errors.name?.message}</p>
         )}
         <label htmlFor="email" className="block text-sm font-bold my-2">
           Email
@@ -82,40 +100,68 @@ export default function RegisterForm() {
           className="w-full border border-gray-300 rounded-lg shadow-sm"
         />
         {errors.email?.message && (
-          <p className="text-red-700">{errors.email?.message}</p>
+          <p className="text-red-700 pt-1">{errors.email?.message}</p>
         )}
         <label htmlFor="password" className="block text-sm font-bold my-3">
           Password
         </label>
-        <input
-          type="password"
-          {...register("password")}
-          className="w-full border border-gray-300 rounded-lg shadow-sm"
-        />
+        <div className="relative">
+          <input
+            type={show}
+            {...register("password")}
+            className="w-full border border-gray-300 rounded-lg shadow-sm"
+          />
+          <span
+            className="absolute top-3 right-3 cursor-pointer"
+            onMouseDown={() => setShow("text")}
+            onMouseUp={() => setShow("password")}
+          >
+            {show === "password" ? (
+              <Image src={"/eye-off.svg"} alt="eye" width={20} height={20} />
+            ) : (
+              <Image src={"/eye.svg"} alt="eye" width={20} height={20} />
+            )}
+          </span>
+        </div>
         {errors.password?.message && (
-          <p className="text-red-700">{errors.password?.message}</p>
+          <p className="text-red-700 pt-1">{errors.password?.message}</p>
         )}
+        <label
+          htmlFor="confirmPassword"
+          className="block text-sm font-bold my-3"
+        >
+          Confirm Password
+        </label>
+        <div className="relative">
+          <input
+            type={cpType}
+            {...register("confirmPassword")}
+            className="w-full border border-gray-300 rounded-lg shadow-sm"
+          />
+          <span
+            className="absolute top-3 right-3 cursor-pointer"
+            onMouseDown={() => setCpType("text")}
+            onMouseUp={() => setCpType("password")}
+          >
+            {cpType === "password" ? (
+              <Image src={"/eye-off.svg"} alt="eye" width={20} height={20} />
+            ) : (
+              <Image src={"/eye.svg"} alt="eye" width={20} height={20} />
+            )}
+          </span>
+        </div>
+        {errors.confirmPassword?.message && (
+          <p className="text-red-700 pt-1">{errors.confirmPassword?.message}</p>
+        )}
+        {err && <p className="text-red-700 pt-1 text-center">{err}</p>}
         <button
           type="submit"
+          disabled={isDisabled}
           className="bg-blue-700 text-white font-semibold rounded-lg shadow-sm mt-6 h-11"
         >
-          Register
+          {isDisabled ? "Signing Up" : "Register"}
         </button>
       </form>
-      <button
-        type="submit"
-        className="border w-full hover:bg-slate-300 font-semibold border-gray-400  gap-2 rounded-lg shadow-sm mt-6 h-11 flex justify-center items-center"
-      >
-        <Image src={"/google.svg"} width={20} height={20} alt={"Google icon"} />
-        Sign up with google
-      </button>
-      <button
-        type="submit"
-        className="border w-full font-semibold border-gray-400 gap-2 rounded-lg shadow-sm mt-6 h-11 flex justify-center items-center bg-gray-600 hover:bg-gray-700 focus:ring-gray-500 focus:ring-offset-gray-200 text-white"
-      >
-        <Image src={"/github.svg"} width={25} height={25} alt={"Github icon"} />
-        Sign up with github
-      </button>
     </div>
   );
 }

@@ -1,5 +1,10 @@
 import LoginForm from "@/components/LoginForm";
 
+export const metadata = {
+  title: "Stack-QA | login",
+  description: "created by Arka Barua",
+};
+
 export default function Login() {
   return (
     <div className="flex flex-col justify-start items-center min-h-screen text-gray-700">

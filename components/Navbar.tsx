@@ -7,7 +7,7 @@ import Link from "next/link";
 export default function Navbar() {
   const { data: session } = useSession();
   return (
-    <div className="bg-slate-200 py-4">
+    <nav className="bg-slate-200 py-4 sticky top-0 z-50">
       <div className="w-11/12 mx-auto grid grid-cols-3 place-content-center items-center">
         <div>
           <Link href={"/"} className="text-2xl italic font-bold text-blue-700">
@@ -46,6 +46,6 @@ export default function Navbar() {
           </div>
         </div>
       </div>
-    </div>
+    </nav>
   );
 }

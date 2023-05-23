@@ -1,0 +1,16 @@
+/* src/styles/react-quill.css */
+.ql-container {
+  @apply w-full bg-white border border-gray-300 rounded-b-lg text-base;
+}
+
+.ql-toolbar {
+  @apply border-b border-gray-300 rounded-t-lg bg-white;
+}
+
+.ql-editor {
+  @apply min-h-[200px] px-4 py-2;
+}
+
+.ql-snow .ql-editor pre.ql-syntax {
+  @apply bg-slate-300 text-gray-700;
+}

@@ -1,3 +1,9 @@
+import QuestionList from "@/components/QuestionList";
+
 export default function Home() {
-  return <main></main>;
+  return (
+    <main>
+      <QuestionList />
+    </main>
+  );
 }

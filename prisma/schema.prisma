@@ -42,14 +42,15 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
+  id            String     @id @default(cuid())
+  name          String
+  email         String     @unique
   password      String?
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
+  Question      Question[]
 }
 
 model VerificationToken {
@@ -58,4 +59,14 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Question {
+  id      String @id @default(cuid())
+  title   String
+  details String @db.MediumText
+  userId  String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }

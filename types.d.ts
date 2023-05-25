@@ -5,4 +5,6 @@ type QuestionType = {
   title: string;
   details: string;
   user: User;
+  createdAt: string;
+  updatedAt: string;
 };

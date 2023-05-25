@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
@@ -30,6 +30,7 @@ const schema = yup.object({
 
 export default function QuestionForm() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
@@ -50,8 +51,8 @@ export default function QuestionForm() {
       onError: (error) => {
         console.log(error);
       },
-      onSuccess: (data) => {
-        console.log(data);
+      onSuccess: async (data) => {
+        await queryClient.invalidateQueries({ queryKey: ["QuestionList"] });
         router.push("/");
       },
     }

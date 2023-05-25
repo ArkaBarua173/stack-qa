@@ -1,12 +1,18 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+type Props = {
+  params: {
+    id: string;
+  };
+};
+
+export async function GET(req: Request, { params: { id } }: Props) {
   try {
-    const data = await prisma.question.findMany({
+    const data = await prisma.question.findUnique({
+      where: { id },
       include: { user: true },
     });
-    // console.log(data);
 
     return NextResponse.json({ data });
   } catch (error) {

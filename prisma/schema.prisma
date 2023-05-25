@@ -62,11 +62,13 @@ model VerificationToken {
 }
 
 model Question {
-  id      String @id @default(cuid())
-  title   String
-  details String @db.MediumText
-  userId  String
-  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  title     String
+  details   String   @db.MediumText
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }

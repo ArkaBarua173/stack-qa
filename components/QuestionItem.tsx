@@ -30,8 +30,10 @@ export default function QuestionItem({ question }: Props) {
       key={question?.id}
       className="shadow rounded-lg p-10 space-y-3 w-full max-w-6xl my-8 mx-auto bg-slate-200"
     >
-      <Link href={"#"}>
-        <h1 className="text-2xl font-semibold ">{question?.title}</h1>
+      <Link href={`/question/${question.id}`}>
+        <h1 className="text-2xl font-semibold inline-block">
+          {question?.title}
+        </h1>
       </Link>
       <div className="mt-8 flex gap-4">
         <Link href={"#"}>

@@ -1,7 +1,7 @@
-import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/route";
 import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 type ReqBody = {
   title: string;
@@ -23,7 +23,7 @@ export async function POST(req: Request) {
   try {
     const existingUser = await prisma.user.findUniqueOrThrow({
       where: {
-        email: session?.user?.email || undefined,
+        email: session?.user?.email ?? undefined,
       },
     });
 

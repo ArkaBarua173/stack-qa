@@ -50,7 +50,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  Question      Question[]
+  questions     Question[]
+  answers       Answer[]
 }
 
 model VerificationToken {
@@ -70,5 +71,30 @@ model Question {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  tags Tag[]
+
+  answers Answer[]
+
   @@index([userId])
+}
+
+model Tag {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  questions Question[]
+}
+
+model Answer {
+  id        String   @id @default(cuid())
+  answer    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId String
+
+  @@index([userId])
+  @@index([questionId])
 }

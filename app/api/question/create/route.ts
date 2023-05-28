@@ -6,10 +6,11 @@ import { prisma } from "@/lib/prisma";
 type ReqBody = {
   title: string;
   details: string;
+  tags: string[];
 };
 
 export async function POST(req: Request) {
-  const { title, details }: ReqBody = await req.json();
+  const { title, details, tags }: ReqBody = await req.json();
 
   const session = await getServerSession(authOptions);
 
@@ -32,6 +33,15 @@ export async function POST(req: Request) {
         title,
         details,
         userId: existingUser?.id,
+        tags: {
+          connectOrCreate: tags.map((tag) => ({
+            create: { name: tag },
+            where: { name: tag },
+          })),
+        },
+      },
+      include: {
+        tags: true,
       },
     });
 

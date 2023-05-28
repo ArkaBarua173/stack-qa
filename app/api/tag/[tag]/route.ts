@@ -1,12 +1,24 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+type Props = {
+  params: {
+    tag: string;
+  };
+};
+
+export async function GET(req: Request, { params: { tag } }: Props) {
   try {
     const data = await prisma.question.findMany({
+      where: {
+        tags: {
+          some: {
+            name: tag,
+          },
+        },
+      },
       include: { user: true, tags: true },
     });
-    // console.log(data);
 
     return NextResponse.json({ data });
   } catch (error) {

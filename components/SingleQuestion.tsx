@@ -7,10 +7,11 @@ import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
-import { sanitize } from "dompurify";
 import hljs from "highlight.js";
+import DOMPurify from "isomorphic-dompurify";
 
 import "highlight.js/styles/github.css";
+import ActivityToolbar from "./ActivityToolbar";
 
 type Props = {
   id: string;
@@ -28,6 +29,8 @@ export default function SingleQuestion({ id }: Props) {
     queryFn: () => getQuestion(id),
   });
 
+  console.log(question);
+
   useEffect(() => {
     if (codeRef.current && typeof window !== "undefined") {
       const codeBlocks = codeRef.current.querySelectorAll<HTMLElement>("pre");
@@ -37,9 +40,9 @@ export default function SingleQuestion({ id }: Props) {
         block.classList.add("code");
       });
     }
-  }, [question, codeRef]);
+  }, [question, question?.details, codeRef]);
 
-  const markup = { __html: sanitize(question?.details as string) };
+  const markup = { __html: DOMPurify.sanitize(question?.details as string) };
 
   return (
     <div className="shadow rounded-lg p-10 space-y-3 w-full max-w-6xl my-8 mx-auto bg-slate-200">
@@ -69,8 +72,24 @@ export default function SingleQuestion({ id }: Props) {
       </div>
       <div className=" w-full h-[1px] bg-gray-400"></div>
       {question?.details && (
-        <div ref={codeRef} dangerouslySetInnerHTML={markup} />
+        <div
+          ref={codeRef}
+          dangerouslySetInnerHTML={markup}
+          className="text-sm"
+        />
       )}
+      <div className="flex gap-2 pt-4 text-xs">
+        {question?.tags.map((tag) => (
+          <Link
+            href={`/tags/${tag.name}`}
+            key={tag.id}
+            className="flex items-center gap-2 bg-slate-300 text-gray-600 px-2 py-1 rounded"
+          >
+            <span>{tag.name}</span>
+          </Link>
+        ))}
+      </div>
+      <ActivityToolbar />
     </div>
   );
 }

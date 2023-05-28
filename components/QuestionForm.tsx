@@ -3,7 +3,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
@@ -15,6 +15,7 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 type FormValues = {
   title: string;
   details: string;
+  tags: string[];
 };
 
 const schema = yup.object({
@@ -26,6 +27,11 @@ const schema = yup.object({
     .string()
     .required("Title is required")
     .min(10, "At least 10 character needed"),
+  tags: yup
+    .array()
+    .of(yup.string().required("Tag is required"))
+    .min(1, "At least one tag is required")
+    .max(5, "Five tags are required"),
 });
 
 export default function QuestionForm() {
@@ -36,6 +42,8 @@ export default function QuestionForm() {
     handleSubmit,
     watch,
     setValue,
+    getValues,
+    control,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
@@ -80,13 +88,17 @@ export default function QuestionForm() {
 
   const editorContent = watch("details");
 
-  console.log(editorContent);
-
   const onEditorStateChange = (editorState: any) => {
     setValue("details", editorState);
   };
 
-  const onSubmit = (data: FormValues) => {
+  const removeTag = (index: number) => {
+    const tags = getValues("tags");
+    tags.splice(index, 1);
+    setValue("tags", tags);
+  };
+
+  const onSubmit = (data: FormValues): void => {
     console.log(data);
     mutate(data);
   };
@@ -121,6 +133,54 @@ export default function QuestionForm() {
           />
           {errors.details?.message && (
             <p className="text-red-700 pt-1">{errors.details?.message}</p>
+          )}
+        </div>
+        <div>
+          <label className="block text-sm font-bold my-2">Tags</label>
+          <Controller
+            name="tags"
+            control={control}
+            defaultValue={[]}
+            render={({ field }) => (
+              <div>
+                <input
+                  type="text"
+                  id="tags"
+                  placeholder="Enter tags separated by commas"
+                  className="w-full border border-gray-300 rounded-lg shadow-sm"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === ",") {
+                      e.preventDefault();
+                      const value = (e.target as HTMLInputElement).value.trim();
+                      if (value) {
+                        field.onChange([...field.value, value]);
+                        (e.target as HTMLInputElement).value = "";
+                      }
+                    }
+                  }}
+                />
+                <div className="flex gap-2 pt-4">
+                  {field.value.map((tag, index) => (
+                    <div
+                      key={tag}
+                      className="flex items-center gap-2 bg-slate-300 text-gray-600 px-2 py-1 rounded"
+                    >
+                      <span>{tag}</span>
+                      <button
+                        type="button"
+                        onClick={() => removeTag(index)}
+                        className="text-gray-800"
+                      >
+                        x
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          />
+          {errors.tags?.message && (
+            <p className="text-red-700 pt-1">{errors.tags?.message}</p>
           )}
         </div>
         <button

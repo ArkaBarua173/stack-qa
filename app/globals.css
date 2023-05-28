@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 .code {
-  @apply bg-slate-100 p-3 rounded-lg text-sm h-full max-h-[500px] overflow-auto font-semibold scrollbar scrollbar-w-[10px] scrollbar-thumb-rounded-lg scrollbar-thumb-slate-400;
+  @apply bg-slate-100 p-3 my-2 rounded-lg text-sm h-full max-h-[500px] overflow-auto font-semibold scrollbar scrollbar-w-[10px] scrollbar-thumb-rounded-lg scrollbar-thumb-slate-400;
 }

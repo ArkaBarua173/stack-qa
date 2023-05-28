@@ -5,6 +5,10 @@ type QuestionType = {
   title: string;
   details: string;
   user: User;
+  tags: {
+    id: string;
+    name: string;
+  }[];
   createdAt: string;
   updatedAt: string;
 };

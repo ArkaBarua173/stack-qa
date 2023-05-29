@@ -29,8 +29,6 @@ export default function SingleQuestion({ id }: Props) {
     queryFn: () => getQuestion(id),
   });
 
-  console.log(question);
-
   useEffect(() => {
     if (codeRef.current && typeof window !== "undefined") {
       const codeBlocks = codeRef.current.querySelectorAll<HTMLElement>("pre");
@@ -46,36 +44,36 @@ export default function SingleQuestion({ id }: Props) {
 
   return (
     <div className="shadow rounded-lg p-10 space-y-3 w-full max-w-6xl my-8 mx-auto bg-slate-200">
-      <h1 className="text-2xl font-semibold">{question?.title}</h1>
-      <div className="pb-4">
-        <div className="flex items-center gap-4 ">
-          Asked By{" "}
-          <Link href={"#"} className="flex gap-2">
-            <Image
-              src={question?.user?.image ? question?.user?.image : "/user.svg"}
-              alt="Profile picture"
-              width={25}
-              height={25}
-              className="rounded-full shadow-md"
-            />
-            <h6 className="font-semibold">{question?.user?.name}</h6>
-          </Link>
-          {question?.createdAt && (
-            <p className="first-letter:capitalize">
-              {formatDistanceToNow(new Date(question?.createdAt), {
-                addSuffix: true,
-                includeSeconds: true,
-              })}
-            </p>
-          )}
-        </div>
+      <h1 className="text-2xl font-semibold text-gray-800">
+        {question?.title}
+      </h1>
+      <div className="flex items-center gap-4 pb-2 text-sm font-medium text-gray-500">
+        Asked By{" "}
+        <Link href={"#"} className="flex gap-2 items-center">
+          <Image
+            src={question?.user?.image ? question?.user?.image : "/user.svg"}
+            alt="Profile picture"
+            width={20}
+            height={20}
+            className="rounded-full shadow-md"
+          />
+          <h6 className="font-bold text-gray-700">{question?.user?.name}</h6>
+        </Link>
+        {question?.createdAt && (
+          <p className="first-letter:capitalize">
+            {formatDistanceToNow(new Date(question?.createdAt), {
+              addSuffix: true,
+              includeSeconds: true,
+            })}
+          </p>
+        )}
       </div>
       <div className=" w-full h-[1px] bg-gray-400"></div>
       {question?.details && (
         <div
           ref={codeRef}
           dangerouslySetInnerHTML={markup}
-          className="text-sm"
+          className="text-sm pt-2"
         />
       )}
       <div className="flex gap-2 pt-4 text-xs">
@@ -89,7 +87,7 @@ export default function SingleQuestion({ id }: Props) {
           </Link>
         ))}
       </div>
-      <ActivityToolbar />
+      <ActivityToolbar questionId={question?.id as string} />
     </div>
   );
 }

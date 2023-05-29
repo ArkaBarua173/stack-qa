@@ -7,13 +7,13 @@ type Props = {
   };
 };
 
-export async function generateStaticParams() {
-  const questions = await getAllQuestions();
+// export async function generateStaticParams() {
+//   const questions = await getAllQuestions();
 
-  return questions.map((question) => ({
-    id: question.id,
-  }));
-}
+//   return questions.map((question) => ({
+//     id: question.id,
+//   }));
+// }
 
 export default function TagPage({ params: { tag } }: Props) {
   return (

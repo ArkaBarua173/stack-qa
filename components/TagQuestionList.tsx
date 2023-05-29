@@ -25,7 +25,8 @@ export default function TagQuestionList({ tagName }: Props) {
       {TagQuestionList && (
         <div className="w-full max-w-6xl my-4 mx-auto">
           <h1 className="font-semibold">
-            {TagQuestionList.length} Questions found by tag {tagName}
+            {TagQuestionList.length} Questions found by tag &quot;{tagName}
+            &quot;
           </h1>
           {TagQuestionList?.map((question) => (
             <QuestionItem key={question?.id} question={question} />

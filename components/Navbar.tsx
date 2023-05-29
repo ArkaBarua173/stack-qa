@@ -30,17 +30,18 @@ export default function Navbar() {
         <div className="justify-self-end">
           <div className="flex gap-4 justify-center items-center">
             <div>
-              <h1 className="tracking-wide text-xl">
-                Welcome,{" "}
-                <span className="font-semibold"> {session?.user?.name}</span>
+              <h1 className="tracking-wide text-lg font-bold text-gray-800">
+                Welcome, {session?.user?.name}
               </h1>
-              <h2 className="text-sm tracking-tight">{session?.user?.email}</h2>
+              <h2 className="text-sm tracking-tight font-medium text-gray-700">
+                {session?.user?.email}
+              </h2>
             </div>
             <Image
               src={session?.user?.image ? session?.user?.image : "/user.svg"}
               alt="Profile picture"
-              width={50}
-              height={50}
+              width={45}
+              height={45}
               className="rounded-full shadow-md"
             />
           </div>

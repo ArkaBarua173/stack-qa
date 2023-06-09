@@ -11,6 +11,9 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import Quill from "quill";
+
+const BlockEmbed = Quill.import("blots/block/embed");
 
 type FormValues = {
   title: string;
@@ -65,6 +68,30 @@ export default function QuestionForm() {
       },
     }
   );
+
+  class CustomCode extends BlockEmbed {
+    static create(value: { lang: string; content: string }) {
+      const { lang, content } = value;
+      const node = super.create(value);
+      const code = document.createElement("code");
+      code.setAttribute("class", lang);
+      code.textContent = content;
+      node.appendChild(code);
+      return node;
+    }
+
+    static value(node: any) {
+      return {
+        lang: node.firstChild.getAttribute("class"),
+        content: node.firstChild.innerText,
+      };
+    }
+  }
+
+  CustomCode.blotName = "code-custom";
+  CustomCode.tagName = "pre";
+
+  Quill.register(CustomCode);
 
   const modules = useMemo(
     () => ({

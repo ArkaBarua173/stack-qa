@@ -1,4 +1,4 @@
-import SingleQuestion from "@/components/SingleQuestion";
+import SingleQuestion from "@/app/components/SingleQuestion";
 import getAllQuestions from "@/lib/getAllQuestions";
 
 type Props = {

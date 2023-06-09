@@ -1,10 +1,11 @@
-import { NextAuthProvider } from "@/components/Provider";
+import { NextAuthProvider } from "@/app/components/Provider";
 import "./globals.css";
 import "react-quill/dist/quill.snow.css";
 import "./react-quill.css";
 import { Inter } from "next/font/google";
-import Navbar from "@/components/Navbar";
-import QueryWrapper from "@/components/QueryProvider";
+import Navbar from "@/app/components/Navbar";
+import QueryWrapper from "@/app/components/QueryProvider";
+import "highlight.js/styles/github.css";
 
 const inter = Inter({ subsets: ["latin"] });
 

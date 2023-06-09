@@ -1,14 +1,15 @@
 import { QuestionType } from "@/types";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import Avatar from "react-avatar";
+import Vote from "./Vote";
 
 type Props = {
   question: QuestionType;
 };
 
 export default function QuestionItem({ question }: Props) {
-  const { data: session } = useSession();
+  console.log(question);
 
   return (
     <div
@@ -32,21 +33,32 @@ export default function QuestionItem({ question }: Props) {
         ))}
       </div>
       <div className="mt-8 flex gap-4 text-sm items-center">
-        <Link href={"#"}>
-          <h6>2 vote</h6>
+        <Link href={"#"} className="flex gap-2">
+          <h6 className="flex gap-1">
+            <span className="font-semibold">{question?.votes?.length}</span>
+            {question?.votes?.length === 1 ? "vote" : "votes"}
+          </h6>
+          <h6 className="flex gap-1">
+            <span className="font-semibold">{question?.answers?.length}</span>
+            {question?.votes?.length === 1 ? "answer" : "answers"}
+          </h6>
         </Link>
         <div>
           <div className="flex items-center gap-4">
             Asked By{" "}
             <Link href={"#"} className="flex gap-2">
-              <Image
-                src={session?.user?.image ? session?.user?.image : "/user.svg"}
-                alt="Profile picture"
-                width={25}
-                height={25}
-                className="rounded-full shadow-md"
-              />
-              <h6>{session?.user?.name}</h6>
+              {question?.user?.image ? (
+                <Image
+                  src={question?.user?.image}
+                  alt="Profile picture"
+                  width={25}
+                  height={25}
+                  className="rounded-full shadow-md"
+                />
+              ) : (
+                <Avatar name={question?.user?.name} size="25" round={true} />
+              )}
+              <h6>{question?.user?.name}</h6>
             </Link>
           </div>
         </div>

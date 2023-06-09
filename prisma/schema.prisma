@@ -88,26 +88,32 @@ model Tag {
 
 model Answer {
   id        String   @id @default(cuid())
-  answer    String
+  answer    String   @db.MediumText
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  question   Question? @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  questionId String?
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId String
+
+  votes Vote[]
 
   @@index([userId])
   @@index([questionId])
 }
 
 model Vote {
-  id         String   @id @default(cuid())
+  id         String    @id @default(cuid())
   userId     String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  questionId String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  question   Question? @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId String?
+
+  answer   Answer? @relation(fields: [answerId], references: [id], onDelete: Cascade)
+  answerId String?
 
   @@index([userId])
   @@index([questionId])
+  @@index([answerId])
 }

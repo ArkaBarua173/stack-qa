@@ -1,4 +1,4 @@
-import TagQuestionList from "@/components/TagQuestionList";
+import TagQuestionList from "@/app/components/TagQuestionList";
 import getAllQuestions from "@/lib/getAllQuestions";
 
 type Props = {

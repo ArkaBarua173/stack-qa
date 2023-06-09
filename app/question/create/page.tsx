@@ -1,4 +1,4 @@
-import QuestionForm from "@/components/QuestionForm";
+import QuestionForm from "@/app/components/QuestionForm";
 
 export default function create() {
   return (

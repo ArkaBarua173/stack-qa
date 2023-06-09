@@ -11,7 +11,14 @@ export async function GET(req: Request, { params: { id } }: Props) {
   try {
     const data = await prisma.question.findUnique({
       where: { id },
-      include: { user: true, tags: true },
+      include: {
+        user: true,
+        tags: true,
+        answers: {
+          include: { user: true },
+          orderBy: { createdAt: "desc" },
+        },
+      },
     });
 
     return NextResponse.json({ data });

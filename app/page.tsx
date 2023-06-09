@@ -1,4 +1,4 @@
-import QuestionList from "@/components/QuestionList";
+import QuestionList from "@/app/components/QuestionList";
 
 export default function Home() {
   return (

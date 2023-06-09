@@ -14,11 +14,11 @@ type Props = {
 const getQuestionVotes = async (
   questionId: string
 ): Promise<QuestionType[]> => {
-  const res = await axios.get(`/api/vote/${questionId}`);
+  const res = await axios.get(`/api/vote/questionVotes/${questionId}`);
   return res.data.data;
 };
 
-export default function ActivityToolbar({ questionId }: Props) {
+export default function Vote({ questionId }: Props) {
   const { data: session } = useSession();
   const queryClient = useQueryClient();
   const { data: QuestionVotes } = useQuery({
@@ -27,7 +27,8 @@ export default function ActivityToolbar({ questionId }: Props) {
   });
 
   const { mutate } = useMutation(
-    async (data: { questionId: string }) => await axios.post(`/api/vote`, data),
+    async (data: { questionId: string }) =>
+      await axios.post(`/api/vote/questionVotes`, data),
     {
       onError: (error) => {
         console.log(error);
@@ -38,8 +39,6 @@ export default function ActivityToolbar({ questionId }: Props) {
       },
     }
   );
-
-  console.log(QuestionVotes);
 
   return (
     <div className="flex items-center gap-2">
@@ -60,9 +59,11 @@ export default function ActivityToolbar({ questionId }: Props) {
           <UpvoteSvg fill="#374151" size="20" />
         </div>
       )}
-      <div>
+      <div className="font-semibold">
         {QuestionVotes?.length}{" "}
-        {QuestionVotes && QuestionVotes?.length === 1 ? "vote" : "votes"}
+        <span className="text-gray-500">
+          {QuestionVotes && QuestionVotes?.length === 1 ? "vote" : "votes"}
+        </span>
       </div>
     </div>
   );

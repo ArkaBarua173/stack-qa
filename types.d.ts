@@ -9,6 +9,19 @@ type QuestionType = {
     id: string;
     name: string;
   }[];
+  votes: {
+    answerId: string | null;
+    userId: string;
+    id: string;
+    questionId: string | null;
+  }[];
   createdAt: string;
   updatedAt: string;
+  answers: {
+    id: string;
+    answer: string;
+    user: User;
+    createdAt: string;
+    updatedAt: string;
+  }[];
 };

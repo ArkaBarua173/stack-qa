@@ -1,4 +1,4 @@
-import RegisterForm from "@/components/RegisterForm";
+import RegisterForm from "@/app/components/RegisterForm";
 
 export const metadata = {
   title: "Stack-QA | Register",

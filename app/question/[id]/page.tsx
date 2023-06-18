@@ -1,5 +1,5 @@
-import SingleQuestion from "@/app/components/SingleQuestion";
-import getAllQuestions from "@/lib/getAllQuestions";
+import dynamic from "next/dynamic";
+const SingleQuestion = dynamic(() => import("@/app/components/SingleQuestion"));
 
 type Props = {
   params: {
@@ -7,15 +7,15 @@ type Props = {
   };
 };
 
-// export async function generateStaticParams() {
-//   const questions = await getAllQuestions();
+// const getQuestion = async (id: string) => {
+//   const res = await fetch(`http://localhost:3000/api/question/${id}`);
+//   const resJson = await res.json();
+//   return resJson.data;
+// };
 
-//   return questions.map((question) => ({
-//     id: question.id,
-//   }));
-// }
+export default async function QuestionPage({ params: { id } }: Props) {
+  // const question = await getQuestion(id);
 
-export default function QuestionPage({ params: { id } }: Props) {
   return (
     <div>
       <SingleQuestion id={id} />

@@ -7,7 +7,6 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import DOMPurify from "isomorphic-dompurify";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 
 import Vote from "./Vote";
 import {
@@ -19,18 +18,20 @@ import {
   WhatsappShareButton,
 } from "react-share";
 import { usePathname } from "next/navigation";
-import AnswerForm from "./AnswerForm";
-import Answers from "./Answers";
+const AnswerForm = dynamic(() => import("./AnswerForm"));
+const Answers = dynamic(() => import("./Answers"));
 import useHighlight from "../hooks/useHighlight";
 import Avatar from "react-avatar";
+import dynamic from "next/dynamic";
 
 type Props = {
   id: string;
 };
 
 const getQuestion = async (id: string): Promise<QuestionType> => {
-  const res = await axios.get(`/api/question/${id}`);
-  return res.data.data;
+  const res = await fetch(`/api/question/${id}`);
+  const resJson = await res.json();
+  return resJson.data;
 };
 
 export default function SingleQuestion({ id }: Props) {
@@ -41,6 +42,7 @@ export default function SingleQuestion({ id }: Props) {
     queryKey: ["getQuestion", id],
     queryFn: () => getQuestion(id),
   });
+  console.log(question);
 
   useHighlight({ codeRef, prop1: question, prop2: ansPrompt });
 
@@ -87,7 +89,7 @@ export default function SingleQuestion({ id }: Props) {
           />
         )}
         <div className="flex gap-2 pt-4 text-xs">
-          {question?.tags.map((tag) => (
+          {question?.tags?.map((tag) => (
             <Link
               href={`/tags/${tag.name}`}
               key={tag.id}
@@ -100,7 +102,7 @@ export default function SingleQuestion({ id }: Props) {
         <div className="flex items-center gap-4 pt-2">
           <Vote questionId={question?.id as string} />
           <div className="flex items-center gap-1">
-            <span className="font-medium">{question?.answers.length}</span>
+            <span className="font-medium">{question?.answers?.length}</span>
             <span className="text-gray-500">Answers</span>
           </div>
           <div className="flex items-center gap-2">
@@ -129,7 +131,7 @@ export default function SingleQuestion({ id }: Props) {
           />
         )}
       </div>
-      {question?.answers.map((answer) => (
+      {question?.answers?.map((answer) => (
         <Answers answer={answer} key={answer.id} ansPrompt={ansPrompt} />
       ))}
     </div>

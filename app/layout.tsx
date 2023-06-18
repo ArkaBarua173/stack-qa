@@ -1,4 +1,4 @@
-import { NextAuthProvider } from "@/app/components/Provider";
+import { NextAuthProvider } from "@/app/utils/Provider";
 import "./globals.css";
 import "react-quill/dist/quill.snow.css";
 import "./react-quill.css";

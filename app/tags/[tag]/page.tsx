@@ -1,5 +1,12 @@
-import TagQuestionList from "@/app/components/TagQuestionList";
-import getAllQuestions from "@/lib/getAllQuestions";
+import Hydrate from "@/app/utils/HydrateClient";
+import getQueryClient from "@/app/utils/getQueryClient";
+import { QuestionType } from "@/types";
+import { dehydrate } from "@tanstack/query-core";
+import dynamic from "next/dynamic";
+
+const TagQuestionList = dynamic(
+  () => import("@/app/components/TagQuestionList")
+);
 
 type Props = {
   params: {
@@ -7,18 +14,23 @@ type Props = {
   };
 };
 
-// export async function generateStaticParams() {
-//   const questions = await getAllQuestions();
+const getQuestionList = async (tag: string): Promise<QuestionType[]> => {
+  const res = await fetch(`http://localhost:3000/api/tag/${tag}`);
+  return res.json();
+};
 
-//   return questions.map((question) => ({
-//     id: question.id,
-//   }));
-// }
+export default async function TagPage({ params: { tag } }: Props) {
+  const queryClient = getQueryClient();
+  await queryClient.prefetchQuery(["TagQuestionList", tag], () =>
+    getQuestionList(tag)
+  );
+  const dehydratedState = dehydrate(queryClient);
 
-export default function TagPage({ params: { tag } }: Props) {
   return (
     <div>
-      <TagQuestionList tagName={tag} />
+      <Hydrate state={dehydratedState}>
+        <TagQuestionList tag={tag} />
+      </Hydrate>
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -38,6 +38,7 @@ const schema = yup.object({
 });
 
 export default function QuestionForm() {
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const queryClient = useQueryClient();
   const {
@@ -59,12 +60,20 @@ export default function QuestionForm() {
   const { mutate } = useMutation(
     async (data: FormValues) => await axios.post("/api/question/create", data),
     {
+      // onMutate: async (data) => {
+      //   await queryClient.cancelQueries({ queryKey: ["QuestionList"] });
+      //   const previousQuestionList = queryClient.getQueryData(["QuestionList"]);
+      //   queryClient.setQueriesData(["QuestionList"], previousQuestionList);
+      // },
       onError: (error) => {
         console.log(error);
       },
       onSuccess: async (data) => {
         await queryClient.invalidateQueries({ queryKey: ["QuestionList"] });
         router.push("/");
+      },
+      onSettled: () => {
+        setIsLoading(false);
       },
     }
   );
@@ -126,6 +135,7 @@ export default function QuestionForm() {
   };
 
   const onSubmit = (data: FormValues): void => {
+    setIsLoading(true);
     console.log(data);
     mutate(data);
   };
@@ -214,7 +224,7 @@ export default function QuestionForm() {
           type="submit"
           className="bg-blue-700 text-white font-semibold rounded-lg shadow-sm mt-6 h-11"
         >
-          Create
+          {isLoading ? "Loading..." : "Create"}
         </button>
       </form>
     </div>

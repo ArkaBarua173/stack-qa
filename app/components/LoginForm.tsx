@@ -44,13 +44,16 @@ export default function LoginForm() {
       callbackUrl: "/",
     });
 
-    if (status?.error) {
-      setErr(status?.error);
+    console.log(status);
+
+    if (status?.ok && !status?.error) {
+      router.push("/");
+      console.log("success");
       setIsDisabled(false);
     }
 
-    if (status?.ok) {
-      router.push("/");
+    if (status?.error) {
+      setErr(status?.error);
       setIsDisabled(false);
     }
   };
@@ -87,7 +90,7 @@ export default function LoginForm() {
         {errors.password?.message && (
           <p className="text-red-700">{errors.password?.message}</p>
         )}
-        {err && <p className="text-error">{err}</p>}
+        {err && <p className="text-red-700">{err}</p>}
         <button
           type="submit"
           disabled={isDisabled}

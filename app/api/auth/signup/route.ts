@@ -34,6 +34,15 @@ export async function POST(req: Request) {
     },
   });
 
+  await prisma.profile.create({
+    data: {
+      bio: "Bio for " + createdUser?.name,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      userId: createdUser.id,
+    },
+  });
+
   return NextResponse.json(
     {
       msg: "User created",

@@ -1,16 +1,15 @@
+"use client";
+
 import { QuestionType } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 import Avatar from "react-avatar";
-import Vote from "./Vote";
 
 type Props = {
   question: QuestionType;
 };
 
 export default function QuestionItem({ question }: Props) {
-  console.log(question);
-
   return (
     <div
       key={question?.id}

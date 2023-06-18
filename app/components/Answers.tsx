@@ -8,6 +8,7 @@ import Link from "next/link";
 import React, { useRef } from "react";
 import AnswerVote from "./AnswerVote";
 import useHighlight from "../hooks/useHighlight";
+import Avatar from "react-avatar";
 
 type Props = {
   answer: {
@@ -32,7 +33,7 @@ export default function Answers({ answer, ansPrompt }: Props) {
       <div className="flex items-center gap-4 pb-2 text-sm font-medium text-gray-500">
         <AnswerVote answerId={answer.id} />
         Answered By{" "}
-        <Link href={"#"} as={"image"} className="flex gap-2 items-center">
+        {/* <Link href={"#"} as={"image"} className="flex gap-2 items-center">
           <Image
             src={answer?.user?.image ? answer?.user?.image : "user.svg"}
             alt="Profile picture"
@@ -42,6 +43,21 @@ export default function Answers({ answer, ansPrompt }: Props) {
             className="rounded-full shadow-md"
           />
           <span className="first-letter:capitalize">{answer?.user?.name}</span>
+        </Link> */}
+        <Link href={"#"} as={"image"} className="flex gap-2 items-center">
+          {answer?.user?.image ? (
+            <Image
+              src={answer?.user?.image}
+              alt="Profile picture"
+              width={20}
+              height={20}
+              priority={true}
+              className="rounded-full shadow-md"
+            />
+          ) : (
+            <Avatar name={answer?.user?.name} size="20" round={true} />
+          )}
+          <h6 className="font-bold text-gray-700">{answer?.user?.name}</h6>
         </Link>
         {answer?.createdAt && (
           <p className="first-letter:capitalize">

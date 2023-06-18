@@ -2,33 +2,41 @@
 
 import { QuestionType } from "@/types";
 import QuestionItem from "./QuestionItem";
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 
-const getTagQuestionList = async (tag: string): Promise<QuestionType[]> => {
-  const res = await axios.get(`/api/tag/${tag}`);
-  return res.data.data;
-};
-
 type Props = {
-  tagName: string;
+  tag: string;
 };
 
-export default function TagQuestionList({ tagName }: Props) {
-  const { data: TagQuestionList } = useQuery({
-    queryKey: ["TagQuestionList", tagName],
-    queryFn: () => getTagQuestionList(tagName),
+type TagQuestionListType = {
+  data: QuestionType[];
+};
+
+const getTagQuestionList = async (
+  tag: string
+): Promise<TagQuestionListType> => {
+  const res = await fetch(`http://localhost:3000/api/tag/${tag}`);
+  return res.json();
+};
+
+export default function TagQuestionList({ tag }: Props) {
+  const { data: TagQuestionList } = useQuery<TagQuestionListType>({
+    queryKey: ["TagQuestionList", tag],
+    queryFn: () => getTagQuestionList(tag),
   });
+
+  console.log(TagQuestionList);
 
   return (
     <div>
       {TagQuestionList && (
         <div className="w-full max-w-6xl my-4 mx-auto">
           <h1 className="font-semibold">
-            {TagQuestionList.length} Questions found by tag &quot;{tagName}
+            {TagQuestionList?.data?.length} Questions found by tag &quot;
+            {tag}
             &quot;
           </h1>
-          {TagQuestionList?.map((question) => (
+          {TagQuestionList?.data?.map((question) => (
             <QuestionItem key={question?.id} question={question} />
           ))}
         </div>

@@ -5,6 +5,7 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { compare } from "bcrypt";
 import { prisma } from "@/lib/prisma";
+import { User } from "@prisma/client";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -18,7 +19,7 @@ export const authOptions: NextAuthOptions = {
         const user = await prisma.user.findFirst({ where: { email } });
 
         if (!user) {
-          throw new Error("No user found with email Please Sign up");
+          throw new Error("No user found with email. Please Sign up");
         }
 
         const checkPassword = await compare(password, user.password as string);
@@ -47,18 +48,57 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user }) {
-      if (user && user.id && user.name) {
+      const existingProfile = await prisma.profile.findFirst({
+        where: { userId: user?.id },
+      });
+      if (!existingProfile) {
+        await prisma.profile.create({
+          data: {
+            bio: "Bio for " + user?.name,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            userId: user.id,
+          },
+        });
+      }
+      if (user?.id && user?.name) {
         token.id = user.id;
         token.name = user.name;
       }
       return token;
     },
     async session({ session, token, user }) {
+      const existingProfile = await prisma.profile.findFirst({
+        where: { userId: user?.id },
+      });
+      if (!existingProfile) {
+        await prisma.profile.create({
+          data: {
+            bio: "Bio for " + user?.name,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            userId: user.id,
+          },
+        });
+      }
       return session;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
+
+async function createUserProfile(user: User) {
+  const newProfile = await prisma.profile.create({
+    data: {
+      bio: "Bio for " + user.name,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      userId: user.id,
+    },
+  });
+
+  return newProfile;
+}
 
 const handler = NextAuth(authOptions);
 

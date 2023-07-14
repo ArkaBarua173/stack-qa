@@ -1,5 +1,8 @@
 import dynamic from "next/dynamic";
-const SingleQuestion = dynamic(() => import("@/app/components/SingleQuestion"));
+const SingleQuestion = dynamic(
+  () => import("@/app/components/SingleQuestion"),
+  { ssr: false }
+);
 
 type Props = {
   params: {

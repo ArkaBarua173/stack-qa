@@ -5,7 +5,8 @@ import { dehydrate } from "@tanstack/query-core";
 import dynamic from "next/dynamic";
 
 const TagQuestionList = dynamic(
-  () => import("@/app/components/TagQuestionList")
+  () => import("@/app/components/TagQuestionList"),
+  { ssr: false }
 );
 
 type Props = {
@@ -14,18 +15,23 @@ type Props = {
   };
 };
 
-const getQuestionList = async (tag: string): Promise<QuestionType[]> => {
+type TagQuestionListType = {
+  data: QuestionType[];
+};
+
+const getTagQuestionList = async (
+  tag: string
+): Promise<TagQuestionListType> => {
   const res = await fetch(`http://localhost:3000/api/tag/${tag}`);
   return res.json();
 };
 
 export default async function TagPage({ params: { tag } }: Props) {
   const queryClient = getQueryClient();
-  await queryClient.prefetchQuery(["TagQuestionList", tag], () =>
-    getQuestionList(tag)
+  await queryClient.prefetchQuery(["QuestionList", tag], () =>
+    getTagQuestionList(tag)
   );
   const dehydratedState = dehydrate(queryClient);
-
   return (
     <div>
       <Hydrate state={dehydratedState}>

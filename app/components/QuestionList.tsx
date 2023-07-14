@@ -1,9 +1,10 @@
 "use client";
 
 import { QuestionType } from "@/types";
-import QuestionItem from "./QuestionItem";
+const QuestionItem = dynamic(() => import("./QuestionItem"), { ssr: false });
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import dynamic from "next/dynamic";
 
 const getQuestionList = async () => {
   const res = await axios.get(`/api/question/getQuestionList`);

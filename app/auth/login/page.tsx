@@ -1,4 +1,8 @@
-import LoginForm from "@/app/components/LoginForm";
+
+import dynamic from "next/dynamic";
+const LoginForm = dynamic(() => import("@/app/components/LoginForm"), {
+  ssr: false,
+});
 
 export const metadata = {
   title: "Stack-QA | login",

@@ -1,4 +1,30 @@
-import { User } from "@prisma/client";
+import { Profile, User } from "@prisma/client";
+
+type ProfileType = {
+  id: string;
+  name: string;
+  email: string;
+  emailVerified: Date | null;
+  image: string | null;
+  profile: Profile;
+};
+
+type VoteType = {
+  answerId: string | null;
+  userId: string;
+  id: string;
+  questionId: string | null;
+};
+
+type AnswerType = {
+  id: string;
+  answer: string;
+  userId: string;
+  user: User;
+  votes: VoteType[];
+  createdAt: string;
+  updatedAt: string;
+};
 
 type QuestionType = {
   id: string;
@@ -9,19 +35,12 @@ type QuestionType = {
     id: string;
     name: string;
   }[];
-  votes: {
-    answerId: string | null;
-    userId: string;
-    id: string;
-    questionId: string | null;
-  }[];
+  votes: VoteType[];
   createdAt: string;
   updatedAt: string;
-  answers: {
-    id: string;
-    answer: string;
-    user: User;
-    createdAt: string;
-    updatedAt: string;
-  }[];
+  answers: AnswerType[];
+  _count: {
+    answers: number;
+    votes: number;
+  };
 };

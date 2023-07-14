@@ -1,49 +1,29 @@
 "use client";
 
-import { User } from "@prisma/client";
+import Link from "next/link";
+const AnswerVote = dynamic(() => import("./AnswerVote"), { ssr: false });
+import Image from "next/image";
+import { AnswerType } from "@/types";
+const Avatar = dynamic(() => import("react-avatar"), { ssr: false });
 import { formatDistanceToNow } from "date-fns";
 import DOMPurify from "isomorphic-dompurify";
-import Image from "next/image";
-import Link from "next/link";
-import React, { useRef } from "react";
-import AnswerVote from "./AnswerVote";
+import { useRef } from "react";
 import useHighlight from "../hooks/useHighlight";
-import Avatar from "react-avatar";
+import dynamic from "next/dynamic";
 
 type Props = {
-  answer: {
-    id: string;
-    answer: string;
-    user: User;
-    createdAt: string;
-    updatedAt: string;
-  };
+  answer: AnswerType;
   ansPrompt: boolean;
 };
 
-export default function Answers({ answer, ansPrompt }: Props) {
+export default function Answer({ answer, ansPrompt }: Props) {
   const codeRef = useRef<HTMLDivElement>(null);
   useHighlight({ codeRef, prop1: answer, prop2: ansPrompt });
-
   return (
-    <div
-      key={answer.id}
-      className="shadow rounded-lg p-8 space-y-3 w-full max-w-6xl my-8 mx-auto bg-slate-200"
-    >
+    <div className="border-4 space-y-3 w-full max-w-6xl my-8 mx-auto bg-slate-200">
       <div className="flex items-center gap-4 pb-2 text-sm font-medium text-gray-500">
-        <AnswerVote answerId={answer.id} />
+        <AnswerVote answerId={answer?.id} />
         Answered By{" "}
-        {/* <Link href={"#"} as={"image"} className="flex gap-2 items-center">
-          <Image
-            src={answer?.user?.image ? answer?.user?.image : "user.svg"}
-            alt="Profile picture"
-            width={20}
-            height={20}
-            priority={true}
-            className="rounded-full shadow-md"
-          />
-          <span className="first-letter:capitalize">{answer?.user?.name}</span>
-        </Link> */}
         <Link href={"#"} as={"image"} className="flex gap-2 items-center">
           {answer?.user?.image ? (
             <Image
@@ -68,13 +48,14 @@ export default function Answers({ answer, ansPrompt }: Props) {
           </p>
         )}
       </div>
+      <div className=" w-full h-[1px] bg-gray-400"></div>
       {answer?.answer && (
         <div
           ref={codeRef}
           dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(answer?.answer),
           }}
-          className="text-sm pt-2"
+          className="text-sm pt-2 font-medium text-gray-700"
         />
       )}
     </div>

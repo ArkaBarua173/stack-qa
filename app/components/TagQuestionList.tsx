@@ -1,7 +1,8 @@
 "use client";
 
 import { QuestionType } from "@/types";
-import QuestionItem from "./QuestionItem";
+import dynamic from "next/dynamic";
+const QuestionItem = dynamic(() => import("./QuestionItem"), { ssr: false });
 import { useQuery } from "@tanstack/react-query";
 
 type Props = {
@@ -24,8 +25,6 @@ export default function TagQuestionList({ tag }: Props) {
     queryKey: ["TagQuestionList", tag],
     queryFn: () => getTagQuestionList(tag),
   });
-
-  console.log(TagQuestionList);
 
   return (
     <div>

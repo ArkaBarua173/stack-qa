@@ -1,9 +1,10 @@
 "use client";
 
 import { QuestionType } from "@/types";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import Avatar from "react-avatar";
+const Avatar = dynamic(() => import("react-avatar"), { ssr: false });
 
 type Props = {
   question: QuestionType;
@@ -34,12 +35,12 @@ export default function QuestionItem({ question }: Props) {
       <div className="mt-8 flex gap-4 text-sm items-center">
         <Link href={"#"} className="flex gap-2">
           <h6 className="flex gap-1">
-            <span className="font-semibold">{question?.votes?.length}</span>
-            {question?.votes?.length === 1 ? "vote" : "votes"}
+            <span className="font-semibold">{question?._count?.votes}</span>
+            {question?._count?.votes === 1 ? "vote" : "votes"}
           </h6>
           <h6 className="flex gap-1">
-            <span className="font-semibold">{question?.answers?.length}</span>
-            {question?.votes?.length === 1 ? "answer" : "answers"}
+            <span className="font-semibold">{question?._count?.answers}</span>
+            {question?._count?.answers === 1 ? "answer" : "answers"}
           </h6>
         </Link>
         <div>

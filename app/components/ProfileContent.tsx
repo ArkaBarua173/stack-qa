@@ -1,16 +1,17 @@
 "use client";
 
-import { Profile, User } from "@prisma/client";
+import { ProfileType } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import dynamic from "next/dynamic";
 import Image from "next/image";
-import Avatar from "react-avatar";
+const Avatar = dynamic(() => import("react-avatar"), { ssr: false });
 
-type ProfileType = {
-  currentUser: User;
+type ReturnProfileType = {
+  currentUser: ProfileType;
 };
 
-const getUserProfile = async (): Promise<ProfileType> => {
+const getUserProfile = async (): Promise<ReturnProfileType> => {
   const res = await axios.get(`/api/profile/getCurrentProfile`);
   return res.data;
 };
@@ -30,8 +31,8 @@ export default function ProfileContent() {
             <Image
               src={data?.currentUser?.image}
               alt="Profile picture"
-              width={100}
-              height={100}
+              width={60}
+              height={60}
               priority={true}
               className="rounded-full shadow-md"
             />
@@ -39,7 +40,7 @@ export default function ProfileContent() {
             <Avatar
               name={data?.currentUser?.name as string}
               size="60"
-              // round={true}
+              round={true}
               className="font-medium"
             />
           )}

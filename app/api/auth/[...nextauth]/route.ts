@@ -87,19 +87,6 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 };
 
-async function createUserProfile(user: User) {
-  const newProfile = await prisma.profile.create({
-    data: {
-      bio: "Bio for " + user.name,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      userId: user.id,
-    },
-  });
-
-  return newProfile;
-}
-
 const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

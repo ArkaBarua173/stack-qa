@@ -1,37 +1,20 @@
 "use client";
 
 import { signOut, useSession } from "next-auth/react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import Avatar from "react-avatar";
+import { useState } from "react";
+const Avatar = dynamic(() => import("react-avatar"), { ssr: false });
 
 export default function Navbar() {
   const [dropdown, setDropdown] = useState(false);
   const router = useRouter();
-  const { data: session, status, update } = useSession();
-  // Polling the session every 1 hour
-  useEffect(() => {
-    // TIP: You can also use `navigator.onLine` and some extra event handlers
-    // to check if the user is online and only update the session if they are.
-    // https://developer.mozilla.org/en-US/docs/Web/API/Navigator/onLine
-    const interval = setInterval(() => update(), 1000 * 60 * 60);
-    return () => clearInterval(interval);
-  }, [update]);
-
-  // Listen for when the page is visible, if the user switches tabs
-  // and makes our tab visible again, re-fetch the session
-  useEffect(() => {
-    const visibilityHandler = () =>
-      document.visibilityState === "visible" && update();
-    window.addEventListener("visibilitychange", visibilityHandler, false);
-    return () =>
-      window.removeEventListener("visibilitychange", visibilityHandler, false);
-  }, [update]);
+  const { data: session, status } = useSession();
 
   return (
-    <nav className="bg-slate-200 py-4 sticky top-0 z-50 h-20">
+    <nav className="bg-slate-200 py-4 sticky top-0 z-20 h-20">
       <div className="w-11/12 mx-auto grid grid-cols-3 place-content-center items-center">
         <div>
           <Link href={"/"} className="text-2xl italic font-bold text-blue-700">
@@ -115,7 +98,9 @@ export default function Navbar() {
                       </li>
                       <li className="px-5 py-2 hover:bg-gray-100">
                         <div
-                          onClick={() => signOut()}
+                          onClick={() => {
+                            signOut();
+                          }}
                           className="flex gap-4 items-center"
                         >
                           <Image

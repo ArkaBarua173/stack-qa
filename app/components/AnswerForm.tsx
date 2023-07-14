@@ -80,7 +80,7 @@ export default function Answer({ questionId, setAnsPrompt }: Props) {
         }),
       }).then(async (res) => {
         const data = await res.json();
-        queryClient.invalidateQueries(["getQuestion"]);
+        queryClient.invalidateQueries(["getAnswers", questionId]);
         setAnswer("");
         setAnsPrompt(false);
         console.log(data);

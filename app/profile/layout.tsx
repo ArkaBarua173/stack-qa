@@ -1,4 +1,7 @@
-import ProfileNav from "../components/ProfileNav";
+import dynamic from "next/dynamic";
+const ProfileNav = dynamic(() => import("@/app/components/ProfileNav"), {
+  ssr: false,
+});
 
 export default function ProfileLayout({
   children,

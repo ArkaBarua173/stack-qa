@@ -6,26 +6,36 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
-import { useSession } from "next-auth/react";
-import { User } from "@prisma/client";
+import { Profile } from "@prisma/client";
 
 const schema = yup.object({
-  username: yup
+  github: yup
     .string()
-    .required("Name is required")
-    .min(3, "At least 3 character needed"),
+    .url()
+    .transform((currentValue) => {
+      const doesNotStartWithHttp =
+        currentValue &&
+        !(
+          currentValue.startsWith("http://") ||
+          currentValue.startsWith("https://")
+        );
+
+      if (doesNotStartWithHttp) {
+        return `http://${currentValue}`;
+      }
+      return currentValue;
+    }),
 });
 
 type FormValues = {
-  username: string;
+  github: string;
 };
 
 type Props = {
-  name: string;
+  githubLink: string;
 };
 
-export default function UsernameForm({ name }: Props) {
-  const { data: session, update } = useSession();
+export default function GithubLinkForm({ githubLink }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const queryClient = useQueryClient();
   const {
@@ -34,24 +44,20 @@ export default function UsernameForm({ name }: Props) {
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
-      username: name,
+      github: githubLink,
     },
     resolver: yupResolver(schema),
   });
 
   const { mutate } = useMutation(
     async (data: FormValues) =>
-      await axios.put("/api/profile/updateUsername", data),
+      await axios.put("/api/profile/updateGithubLink", data),
     {
       onError: (error) => {
         console.log(error);
       },
-      onSuccess: async (data: { data: { updatedUser: User } }) => {
+      onSuccess: async (data: { data: { updatedGithub: Profile } }) => {
         console.log(data);
-        await update({
-          ...session,
-          user: { ...session?.user, name: data?.data?.updatedUser?.name },
-        });
         await queryClient.invalidateQueries({ queryKey: ["getProfile"] });
       },
       onSettled: () => {
@@ -63,23 +69,22 @@ export default function UsernameForm({ name }: Props) {
   const onSubmit = (data: FormValues) => {
     setIsLoading(true);
     mutate(data);
+    setIsLoading(false);
   };
 
   return (
     <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
       <label>
-        <span className="block text-sm font-medium my-2">Username</span>
-        {name && (
-          <input
-            type="text"
-            defaultValue={name || ""}
-            {...register("username")}
-            className="w-full border border-gray-300 rounded-lg shadow-sm"
-          />
-        )}
+        <span className="block text-sm font-medium my-2">Github</span>
+        <input
+          type="url"
+          {...register("github")}
+          defaultValue={githubLink}
+          className="w-full border border-gray-300 rounded-lg shadow-sm"
+        />
       </label>
-      {errors.username?.message && (
-        <p className="text-red-700 pt-1">{errors.username?.message}</p>
+      {errors.github?.message && (
+        <p className="text-red-700 pt-1">{errors.github?.message}</p>
       )}
       <div className="flex gap-4 align-bottom">
         <button

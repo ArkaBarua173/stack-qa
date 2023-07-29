@@ -45,6 +45,7 @@ export default function ProfilePictureForm({
         </button>
       </div>
       <Modal
+        title="Change Profile Picture"
         isVisible={isModalVisible}
         onClose={() => {
           setImageUrl(null);

@@ -1,6 +1,5 @@
 "use client";
 
-import { QuestionType } from "@/types";
 import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
@@ -96,6 +95,7 @@ export default function SingleQuestion({ id }: Props) {
           ))}
         </div>
         <ActivityToolBar
+          userId={question?.user?.id}
           questionId={question?.id}
           ansPrompt={ansPrompt}
           setAnsPropmt={setAnsPrompt}

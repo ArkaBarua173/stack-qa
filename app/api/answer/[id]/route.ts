@@ -10,22 +10,15 @@ type Props = {
 };
 
 type ReqBody = {
-  title: string;
-  details: string;
-  tags: string[];
+  answer: string;
 };
 
 export async function GET(req: Request, { params: { id } }: Props) {
   try {
-    const data = await prisma.question.findUnique({
+    const data = await prisma.answer.findUniqueOrThrow({
       where: { id },
       include: {
         user: true,
-        tags: true,
-        answers: {
-          include: { user: true },
-          orderBy: { createdAt: "desc" },
-        },
       },
     });
 
@@ -36,13 +29,13 @@ export async function GET(req: Request, { params: { id } }: Props) {
 }
 
 export async function PUT(req: Request, { params: { id } }: Props) {
-  const { title, details, tags }: ReqBody = await req.json();
+  const { answer }: ReqBody = await req.json();
 
   const session = await getServerSession(authOptions);
 
   if (!session) {
     return NextResponse.json(
-      { message: "Login to edit question" },
+      { message: "Login to edit answer" },
       { status: 401 }
     );
   }
@@ -54,46 +47,30 @@ export async function PUT(req: Request, { params: { id } }: Props) {
       },
     });
 
-    const existingQuestion = await prisma.question.findUnique({
+    const existingAnswer = await prisma.answer.findUnique({
       where: { id },
-      include: { tags: true },
     });
 
-    if (existingQuestion?.userId !== existingUser?.id) {
+    if (existingAnswer?.userId !== existingUser?.id) {
       return NextResponse.json(
-        { message: "You can't edit this question" },
+        { message: "You can't edit this answer" },
         { status: 401 }
       );
     }
 
-    const existingTagIds = existingQuestion?.tags.map((tag) => ({
-      id: tag.id,
-    }));
-
-    const updatedQuestion = await prisma.question.update({
+    const updatedAnswer = await prisma.answer.update({
       where: {
         id,
       },
       data: {
-        title,
-        details,
-        tags: {
-          disconnect: existingTagIds,
-          connectOrCreate: tags.map((tag) => ({
-            create: { name: tag },
-            where: { name: tag },
-          })),
-        },
-      },
-      include: {
-        tags: true,
+        answer,
       },
     });
 
     return NextResponse.json(
       {
-        message: "Question updated",
-        data: updatedQuestion,
+        message: "Answer updated",
+        data: updatedAnswer,
       },
       { status: 201 }
     );
@@ -107,7 +84,7 @@ export async function DELETE(req: Request, { params: { id } }: Props) {
 
   if (!session) {
     return NextResponse.json(
-      { message: "Login to delete question" },
+      { message: "Login to delete answer" },
       { status: 401 }
     );
   }
@@ -119,42 +96,26 @@ export async function DELETE(req: Request, { params: { id } }: Props) {
       },
     });
 
-    const existingQuestion = await prisma.question.findUnique({
+    const existingAnswer = await prisma.answer.findUnique({
       where: { id },
-      include: { tags: true },
     });
 
-    if (existingQuestion?.userId !== existingUser?.id) {
+    if (existingAnswer?.userId !== existingUser?.id) {
       return NextResponse.json(
-        { message: "You can't delete this question" },
+        { message: "You can't delete this answer" },
         { status: 401 }
       );
     }
 
-    const existingTagIds = existingQuestion?.tags.map((tag) => ({
-      id: tag.id,
-    }));
-
-    await prisma.question.update({
+    await prisma.answer.delete({
       where: {
         id,
-      },
-      data: {
-        tags: {
-          disconnect: existingTagIds,
-        },
-      },
-    });
-
-    await prisma.question.delete({
-      where: {
-        id: existingQuestion?.id,
       },
     });
 
     return NextResponse.json(
       {
-        message: "Question deleted successfully",
+        message: "Answer deleted",
       },
       { status: 201 }
     );

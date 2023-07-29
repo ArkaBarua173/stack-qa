@@ -137,22 +137,22 @@ export default function ProfilePictureModalContent({
           </div>
         </div>
       ) : (
-        <div>
-          <div className="flex gap-4 items-center">
+        <div className="py-4">
+          <div className="flex flex-col gap-4 items-center">
             <figure className="">
               {pic ? (
                 <Image
                   src={pic}
                   alt="Profile picture"
-                  width={60}
-                  height={60}
+                  width={100}
+                  height={100}
                   priority={true}
-                  className="rounded-full shadow-md"
+                  className="rounded-full shadow-lg"
                 />
               ) : (
                 <Avatar
                   name={name}
-                  size="60"
+                  size="100"
                   round={true}
                   className="font-medium"
                 />
@@ -163,7 +163,7 @@ export default function ProfilePictureModalContent({
                 htmlFor="upload"
                 className="bg-slate-300 hover:bg-slate-400 hover:text-gray-200 px-6 text-sm text-gray-800 font-semibold rounded-lg shadow-sm py-2"
               >
-                Change File
+                Choose File
               </label>
               <input
                 type="file"

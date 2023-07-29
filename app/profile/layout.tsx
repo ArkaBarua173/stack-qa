@@ -13,7 +13,7 @@ export default function ProfileLayout({
       <aside className="w-1/5 bg-slate-300 h-[calc(100vh-theme('spacing.20'))]">
         <ProfileNav />
       </aside>
-      <div>{children}</div>
+      <div className="flex-auto">{children}</div>
     </section>
   );
 }

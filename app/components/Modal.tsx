@@ -1,8 +1,10 @@
 export default function Modal({
+  title,
   isVisible,
   onClose,
   children,
 }: {
+  title: string;
   isVisible: boolean;
   children: React.ReactNode;
   onClose: () => void;
@@ -23,7 +25,7 @@ export default function Modal({
     >
       <div className="w-[600px] bg-white p-4 rounded">
         <div className="flex justify-between items-center">
-          <div className="text-xl font-semibold">Change profile picture</div>
+          <div className="text-xl font-semibold">{title}</div>
           <div className="cursor-pointer text-2xl" onClick={() => onClose()}>
             &times;
           </div>

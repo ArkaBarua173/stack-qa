@@ -7,6 +7,20 @@ import { compare } from "bcrypt";
 import { prisma } from "@/lib/prisma";
 import { User } from "@prisma/client";
 
+declare module "next-auth" {
+  /**
+   * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
+   */
+  interface Session {
+    user: {
+      name: string;
+      email: string;
+      image: string;
+      id: string; //Added the 'id' property here
+    };
+  }
+}
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -81,6 +95,7 @@ export const authOptions: NextAuthOptions = {
           },
         });
       }
+      session.user.id = token.id as string;
       return session;
     },
   },

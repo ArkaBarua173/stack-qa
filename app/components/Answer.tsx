@@ -24,7 +24,6 @@ export default function Answer({ answer, ansPrompt }: Props) {
   const { data: session } = useSession();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const queryClient = useQueryClient();
-  console.log("answer", answer);
 
   const { mutate, isLoading } = useMutation(
     async () => await axios.delete(`/api/answer/${answer?.id}`),
@@ -53,7 +52,10 @@ export default function Answer({ answer, ansPrompt }: Props) {
         <div className="flex items-center gap-4 pb-2 text-sm font-medium text-gray-500">
           <AnswerVote answerId={answer?.id} />
           Answered By{" "}
-          <Link href={"#"} as={"image"} className="flex gap-2 items-center">
+          <Link
+            href={`/user/${answer?.user?.id}`}
+            className="flex gap-2 items-center"
+          >
             {answer?.user?.image ? (
               <Image
                 src={answer?.user?.image}

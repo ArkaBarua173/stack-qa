@@ -33,8 +33,6 @@ export default function SingleQuestion({ id }: Props) {
     queryFn: () => getQuestion(id),
   });
 
-  console.log(question);
-
   const codeRef = useRef<HTMLDivElement>(null);
 
   useHighlight({ codeRef, prop1: question, prop2: ansPrompt });
@@ -47,7 +45,10 @@ export default function SingleQuestion({ id }: Props) {
         </h1>
         <div className="flex items-center gap-4 pb-2 text-sm font-medium text-gray-500">
           Asked By{" "}
-          <Link href={"#"} as={"image"} className="flex gap-2 items-center">
+          <Link
+            href={`/user/${question?.user?.id}`}
+            className="flex gap-2 items-center"
+          >
             {question?.user?.image ? (
               <Image
                 src={question?.user?.image}

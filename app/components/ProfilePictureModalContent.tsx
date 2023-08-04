@@ -58,7 +58,9 @@ export default function ProfilePictureModalContent({
     })
       .then((res) => {
         if (res.ok) {
-          queryClient.invalidateQueries({ queryKey: ["getProfile"] });
+          queryClient.invalidateQueries({
+            queryKey: ["getProfile", "getUserProfileById"],
+          });
           setImageUrl(null);
           setIsModalVisible(false);
         }

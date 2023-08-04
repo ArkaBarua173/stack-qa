@@ -58,7 +58,9 @@ export default function TwitterLinkForm({ twitterLink }: Props) {
       },
       onSuccess: async (data: { data: { updatedTwitter: Profile } }) => {
         console.log(data);
-        await queryClient.invalidateQueries({ queryKey: ["getProfile"] });
+        await queryClient.invalidateQueries({
+          queryKey: ["getProfile", "getUserProfileById"],
+        });
       },
       onSettled: () => {
         setIsLoading(false);

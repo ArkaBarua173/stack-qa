@@ -1,4 +1,4 @@
-import { Profile, User } from "@prisma/client";
+import { Profile, Question, User } from "@prisma/client";
 
 type ProfileType = {
   id: string;
@@ -7,6 +7,7 @@ type ProfileType = {
   emailVerified: Date | null;
   image: string | null;
   profile: Profile;
+  questions: QuestionType[];
 };
 
 type VoteType = {

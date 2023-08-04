@@ -17,6 +17,7 @@ export default function Search() {
         <input
           type="search"
           value={searchQuery}
+          placeholder="Search by title, tags or user..."
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full border border-gray-300 rounded-3xl shadow-sm pl-10"
         />

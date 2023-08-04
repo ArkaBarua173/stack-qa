@@ -40,15 +40,7 @@ export default function Navbar() {
               </button>
             </div>
           ) : (
-            <div className="flex gap-4 justify-center items-center">
-              <div>
-                <h1 className="tracking-wide text-lg font-bold text-gray-800">
-                  Welcome, {session?.user?.name}
-                </h1>
-                <h2 className="text-sm tracking-tight font-medium text-gray-700">
-                  {session?.user?.email}
-                </h2>
-              </div>
+            <div className="flex gap-4 justify-center items-center w-24">
               <div
                 className="cursor-pointer relative"
                 onClick={() => setDropdown((prev) => !prev)}
@@ -69,39 +61,52 @@ export default function Navbar() {
                   />
                 )}
                 {dropdown && (
-                  <div className="absolute top-20 right-0 w-56 shadow">
-                    <ul className=" bg-white shadow-lg rounded-lg py-2">
-                      <li className="px-5 py-2 hover:bg-gray-100 ">
-                        <Link
-                          href={"/profile"}
-                          className="flex gap-4 items-center"
-                        >
-                          <Image
-                            src={"/profile.svg"}
-                            alt="Profile"
-                            width={18}
-                            height={18}
-                          />
-                          <div>Profile</div>
-                        </Link>
-                      </li>
-                      <li className="px-5 py-2 hover:bg-gray-100">
-                        <div
-                          onClick={() => {
-                            signOut();
-                          }}
-                          className="flex gap-4 items-center"
-                        >
-                          <Image
-                            src={"/signout.svg"}
-                            alt="sign out"
-                            width={18}
-                            height={18}
-                          />
-                          <div>Sign out</div>
-                        </div>
-                      </li>
-                    </ul>
+                  <div className="absolute top-14 right-0 w-56 shadow">
+                    <div className="bg-white shadow-lg rounded-lg py-2 px-5">
+                      <div>
+                        <h1 className="tracking-wide text-lg font-bold text-gray-800">
+                          <span className="inline-block">
+                            {session?.user?.name}
+                          </span>
+                        </h1>
+                        <h2 className="text-sm tracking-tight font-medium text-gray-700">
+                          {session?.user?.email}
+                        </h2>
+                      </div>
+                      <hr className="mt-2" />
+                      <ul>
+                        <li className="px-2 py-2 hover:bg-gray-100 ">
+                          <Link
+                            href={"/profile"}
+                            className="flex gap-4 items-center"
+                          >
+                            <Image
+                              src={"/profile.svg"}
+                              alt="Profile"
+                              width={18}
+                              height={18}
+                            />
+                            <div>Profile</div>
+                          </Link>
+                        </li>
+                        <li className="px-2 py-2 hover:bg-gray-100">
+                          <div
+                            onClick={() => {
+                              signOut();
+                            }}
+                            className="flex gap-4 items-center"
+                          >
+                            <Image
+                              src={"/signout.svg"}
+                              alt="sign out"
+                              width={18}
+                              height={18}
+                            />
+                            <div>Sign out</div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 )}
               </div>

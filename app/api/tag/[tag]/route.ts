@@ -17,7 +17,13 @@ export async function GET(req: Request, { params: { tag } }: Props) {
           },
         },
       },
-      include: { user: true, tags: true },
+      include: {
+        user: true,
+        tags: true,
+        _count: {
+          select: { answers: true, votes: true },
+        },
+      },
     });
 
     return NextResponse.json({ data });

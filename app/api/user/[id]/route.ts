@@ -4,7 +4,13 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "../../auth/[...nextauth]/route";
 
-export async function GET(req: Request) {
+type Props = {
+  params: {
+    id: string;
+  };
+};
+
+export async function GET(req: Request, { params: { id } }: Props) {
   function exclude<User, Key extends keyof User>(
     user: User,
     keys: Key[]
@@ -15,19 +21,21 @@ export async function GET(req: Request) {
     return user;
   }
 
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    return NextResponse.json(
-      { message: "Login to ask a question" },
-      { status: 401 }
-    );
-  }
-
   try {
-    const user = await prisma.user.findUnique({
-      where: { email: session?.user?.email ?? undefined },
-      include: { profile: true },
+    const user = await prisma.user.findFirstOrThrow({
+      where: { id },
+      include: {
+        profile: true,
+        questions: {
+          include: {
+            user: true,
+            tags: true,
+            _count: {
+              select: { answers: true, votes: true },
+            },
+          },
+        },
+      },
     });
     const currentUser = exclude(user as User, ["password"]);
 

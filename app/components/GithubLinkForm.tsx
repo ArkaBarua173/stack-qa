@@ -58,7 +58,9 @@ export default function GithubLinkForm({ githubLink }: Props) {
       },
       onSuccess: async (data: { data: { updatedGithub: Profile } }) => {
         console.log(data);
-        await queryClient.invalidateQueries({ queryKey: ["getProfile"] });
+        await queryClient.invalidateQueries({
+          queryKey: ["getProfile", "getUserProfileById"],
+        });
       },
       onSettled: () => {
         setIsLoading(false);

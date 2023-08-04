@@ -89,7 +89,12 @@ export default function EditQuestionForm({ questionId }: Props) {
       },
       onSuccess: async () => {
         await queryClient.invalidateQueries({
-          queryKey: ["QuestionList", "getQuestion", "getQuestionContent"],
+          queryKey: [
+            "QuestionList",
+            "getQuestion",
+            "getQuestionContent",
+            "getUserProfileById",
+          ],
         });
         router.back();
       },

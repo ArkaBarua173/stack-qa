@@ -46,19 +46,25 @@ export default function QuestionItem({ question }: Props) {
         <div>
           <div className="flex items-center gap-4">
             Asked By{" "}
-            <Link href={"#"} className="flex gap-2">
+            <Link
+              href={`/user/${question?.user?.id}`}
+              className="flex gap-2 items-center"
+            >
               {question?.user?.image ? (
                 <Image
                   src={question?.user?.image}
                   alt="Profile picture"
-                  width={25}
-                  height={25}
+                  width={20}
+                  height={20}
+                  priority={true}
                   className="rounded-full shadow-md"
                 />
               ) : (
-                <Avatar name={question?.user?.name} size="25" round={true} />
+                <Avatar name={question?.user?.name} size="20" round={true} />
               )}
-              <h6>{question?.user?.name}</h6>
+              <h6 className="font-bold text-gray-700">
+                {question?.user?.name}
+              </h6>
             </Link>
           </div>
         </div>

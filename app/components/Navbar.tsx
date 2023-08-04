@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Search from "./Search";
 const Avatar = dynamic(() => import("react-avatar"), { ssr: false });
 
 export default function Navbar() {
@@ -21,19 +22,7 @@ export default function Navbar() {
             Stack-QA
           </Link>
         </div>
-        <div className="relative">
-          <input
-            type="search"
-            className="w-full border border-gray-300 rounded-3xl shadow-sm pl-10"
-          />
-          <Image
-            src={"/search.svg"}
-            alt={"search icon"}
-            width={20}
-            height={20}
-            className="absolute top-2.5 left-3"
-          />
-        </div>
+        <Search />
         <div className="justify-self-end">
           {status === "unauthenticated" ? (
             <div className="flex gap-3">

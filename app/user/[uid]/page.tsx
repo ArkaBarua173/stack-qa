@@ -8,7 +8,10 @@ import Link from "next/link";
 import Avatar from "react-avatar";
 import { FaGithub } from "react-icons/fa";
 import { BsTwitter } from "react-icons/bs";
-import QuestionItem from "@/app/components/QuestionItem";
+import dynamic from "next/dynamic";
+const QuestionItem = dynamic(() => import("@/app/components/QuestionItem"), {
+  ssr: false,
+});
 
 type Props = {
   params: {
@@ -57,7 +60,7 @@ export default function UserPage({ params: { uid } }: Props) {
           <p>{data?.currentUser?.profile?.bio}</p>
           {data?.currentUser?.profile?.github && (
             <Link
-              href={data?.currentUser?.profile?.github as string}
+              href={data?.currentUser?.profile?.github}
               target="_blank"
               className="text-blue-600 hover:underline flex gap-2 items-center"
             >
@@ -69,7 +72,7 @@ export default function UserPage({ params: { uid } }: Props) {
           )}
           {data?.currentUser?.profile?.twitter && (
             <Link
-              href={data?.currentUser?.profile?.twitter as string}
+              href={data?.currentUser?.profile?.twitter}
               target="_blank"
               className="text-blue-600 hover:underline flex gap-2 items-center"
             >

@@ -25,7 +25,9 @@ export async function GET(req: Request, { params: { id } }: Props) {
     const user = await prisma.user.findFirstOrThrow({
       where: { id },
       include: {
-        profile: true,
+        profile: {
+          select: { twitter: true, github: true, bio: true },
+        },
         questions: {
           include: {
             user: true,

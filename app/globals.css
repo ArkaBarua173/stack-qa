@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 .code {
-  @apply p-3 my-2 rounded-lg h-full max-h-[500px] overflow-auto scrollbar scrollbar-w-[10px] scrollbar-thumb-rounded-lg scrollbar-thumb-slate-400 font-sans;
+  @apply p-3 my-2 rounded-lg bg-white h-full max-h-[500px] overflow-auto scrollbar scrollbar-w-[10px] scrollbar-thumb-rounded-lg scrollbar-thumb-slate-400 font-sans;
 }

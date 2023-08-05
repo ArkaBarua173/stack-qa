@@ -2,15 +2,7 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Vote from "./Vote";
-import {
-  FacebookIcon,
-  FacebookShareButton,
-  TelegramIcon,
-  TelegramShareButton,
-  WhatsappIcon,
-  WhatsappShareButton,
-} from "react-share";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 const Answer = dynamic(() => import("./Answer"), { ssr: false });
 const AnswerForm = dynamic(() => import("./AnswerForm"), { ssr: false });
 import { AnswerType } from "@/types";
@@ -41,7 +33,6 @@ export default function ActivityToolBar({
 }: Props) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const router = useRouter();
-  const pathname = usePathname();
   const { data: session } = useSession();
   const { data } = useQuery({
     queryKey: ["getAnswers", questionId],
@@ -93,18 +84,6 @@ export default function ActivityToolBar({
               Delete
             </div>
           )}
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="font-medium">Share with</span>
-          <FacebookShareButton url={`http://localhost:3000${pathname}`}>
-            <FacebookIcon size={25} round={true} />
-          </FacebookShareButton>
-          <WhatsappShareButton url={`http://localhost:3000${pathname}`}>
-            <WhatsappIcon size={25} round={true} />
-          </WhatsappShareButton>
-          <TelegramShareButton url={`http://localhost:3000${pathname}`}>
-            <TelegramIcon size={25} round={true} />
-          </TelegramShareButton>
         </div>
         <button
           className="bg-blue-600 text-white py-2 px-4 rounded shadow ml-2"

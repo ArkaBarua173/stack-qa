@@ -1,13 +1,8 @@
+import TagQuestionList from "@/app/components/TagQuestionList";
 import Hydrate from "@/app/utils/HydrateClient";
 import getQueryClient from "@/app/utils/getQueryClient";
 import { QuestionType } from "@/types";
 import { dehydrate } from "@tanstack/query-core";
-import dynamic from "next/dynamic";
-
-const TagQuestionList = dynamic(
-  () => import("@/app/components/TagQuestionList"),
-  { ssr: false }
-);
 
 type Props = {
   params: {

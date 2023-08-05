@@ -1,3 +1,5 @@
+"use client";
+
 import dynamic from "next/dynamic";
 const SingleQuestion = dynamic(
   () => import("@/app/components/SingleQuestion"),

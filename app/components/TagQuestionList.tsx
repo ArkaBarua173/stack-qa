@@ -21,7 +21,7 @@ const getTagQuestionList = async (
 };
 
 export default function TagQuestionList({ tag }: Props) {
-  const { data: TagQuestionList } = useQuery<TagQuestionListType>({
+  const { data: TagQuestionList, isLoading } = useQuery<TagQuestionListType>({
     queryKey: ["TagQuestionList", tag],
     queryFn: () => getTagQuestionList(tag),
   });
@@ -35,6 +35,7 @@ export default function TagQuestionList({ tag }: Props) {
             {tag}
             &quot;
           </h1>
+          {isLoading && <p className="text-center">Loading...</p>}
           {TagQuestionList?.data?.map((question) => (
             <QuestionItem key={question?.id} question={question} />
           ))}

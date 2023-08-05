@@ -51,7 +51,7 @@ export default function ActivityToolBar({
   const queryClient = useQueryClient();
 
   const { mutate, isLoading } = useMutation(
-    async () => await axios.delete(`/api/question/${questionId}`),
+    async () => await axios.delete(`/api/question/delete/${questionId}`),
     {
       onError: (error) => {
         console.log(error);

@@ -82,7 +82,7 @@ export default function EditQuestionForm({ questionId }: Props) {
 
   const { mutate } = useMutation(
     async (data: FormValues) =>
-      await axios.put(`/api/question/${questionId}`, data),
+      await axios.put(`/api/question/edit/${questionId}`, data),
     {
       onError: (error) => {
         console.log(error);

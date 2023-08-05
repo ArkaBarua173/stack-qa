@@ -60,11 +60,6 @@ export default function QuestionForm() {
   const { mutate } = useMutation(
     async (data: FormValues) => await axios.post("/api/question/create", data),
     {
-      // onMutate: async (data) => {
-      //   await queryClient.cancelQueries({ queryKey: ["QuestionList"] });
-      //   const previousQuestionList = queryClient.getQueryData(["QuestionList"]);
-      //   queryClient.setQueriesData(["QuestionList"], previousQuestionList);
-      // },
       onError: (error) => {
         console.log(error);
       },
@@ -149,6 +144,7 @@ export default function QuestionForm() {
           </label>
           <input
             type="text"
+            placeholder="Enter title of the question"
             {...register("title")}
             className="w-full border border-gray-300 rounded-lg shadow-sm"
           />

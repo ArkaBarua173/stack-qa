@@ -1,5 +1,7 @@
-
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { getServerSession } from "next-auth";
 import dynamic from "next/dynamic";
+import { redirect } from "next/navigation";
 const LoginForm = dynamic(() => import("@/app/components/LoginForm"), {
   ssr: false,
 });
@@ -9,7 +11,10 @@ export const metadata = {
   description: "created by Arka Barua",
 };
 
-export default function Login() {
+export default async function Login() {
+  const session = await getServerSession(authOptions);
+
+  if (session) redirect("/");
   return (
     <div className="flex flex-col justify-start items-center min-h-screen text-gray-700">
       <div className="text-center font-bold pb-3">

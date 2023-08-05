@@ -7,7 +7,7 @@ type Props = {
   };
 };
 
-export async function GET(req: Request, { params: { tag } }: Props) {
+export async function GET({ params: { tag } }: Props) {
   try {
     const data = await prisma.question.findMany({
       where: {

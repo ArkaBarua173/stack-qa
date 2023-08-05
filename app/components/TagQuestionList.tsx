@@ -4,6 +4,7 @@ import { QuestionType } from "@/types";
 import dynamic from "next/dynamic";
 const QuestionItem = dynamic(() => import("./QuestionItem"), { ssr: false });
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 type Props = {
   tag: string;
@@ -16,8 +17,8 @@ type TagQuestionListType = {
 const getTagQuestionList = async (
   tag: string
 ): Promise<TagQuestionListType> => {
-  const res = await fetch(`http://localhost:3000/api/tag/${tag}`);
-  return res.json();
+  const res = await axios.get(`http://localhost:3000/api/tag/${tag}`);
+  return res.data;
 };
 
 export default function TagQuestionList({ tag }: Props) {

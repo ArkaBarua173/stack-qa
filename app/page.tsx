@@ -3,10 +3,11 @@ import getQueryClient from "./utils/getQueryClient";
 import { QuestionType } from "@/types";
 import { dehydrate } from "@tanstack/query-core";
 import Hydrate from "./utils/HydrateClient";
+import axios from "axios";
 
 const getQuestionList = async (): Promise<QuestionType[]> => {
-  const res = await fetch(`http://localhost:3000/api/question/getQuestionList`);
-  return res.json();
+  const res = await axios.get(`/api/question/getQuestionList`);
+  return res.data;
 };
 
 export default async function Home() {

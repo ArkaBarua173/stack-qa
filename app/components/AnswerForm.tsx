@@ -3,11 +3,8 @@
 import dynamic from "next/dynamic";
 import { Dispatch, FormEvent, SetStateAction, useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import Quill from "quill";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
-
-const BlockEmbed = Quill.import("blots/block/embed");
 
 type FormValues = {
   anwer: string;
@@ -22,27 +19,7 @@ export default function Answer({ questionId, setAnsPrompt }: Props) {
   const queryClient = useQueryClient();
   const [answer, setAnswer] = useState("");
   const [error, setError] = useState<Partial<FormValues>>({});
-  class CustomCode extends BlockEmbed {
-    static create(value: { lang: string; content: string }) {
-      const { lang, content } = value;
-      const node = super.create(value);
-      const code = document.createElement("code");
-      code.setAttribute("class", lang);
-      code.textContent = content;
-      node.appendChild(code);
-      return node;
-    }
 
-    static value(node: any) {
-      return {
-        lang: node.firstChild.getAttribute("class"),
-        content: node.firstChild.innerText,
-      };
-    }
-  }
-
-  CustomCode.blotName = "code-custom";
-  CustomCode.tagName = "pre";
   const modules = useMemo(
     () => ({
       toolbar: {

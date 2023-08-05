@@ -5,7 +5,6 @@ import "./react-quill.css";
 import { Inter } from "next/font/google";
 import Navbar from "@/app/components/Navbar";
 import QueryWrapper from "@/app/components/QueryProvider";
-import "highlight.js/styles/github.css";
 
 const inter = Inter({ subsets: ["latin"] });
 

@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { Dispatch, FormEvent, SetStateAction, useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -46,24 +47,23 @@ export default function Answer({ questionId, setAnsPrompt }: Props) {
   };
 
   const onAnswerSubmit = (e: FormEvent<HTMLFormElement>): void => {
-    setIsLoading(true);
     e.preventDefault();
+    setIsLoading(true);
     const validationError = validateForm();
     if (Object.keys(validationError).length === 0) {
       setError({});
-      fetch(`${process.env.BASE_URL}/api/answer`, {
-        method: "POST",
-        body: JSON.stringify({
-          questionId,
-          answer,
-        }),
-      }).then(async (res) => {
-        const data = await res.json();
-        queryClient.invalidateQueries(["getAnswers", questionId]);
-        setAnswer("");
-        setAnsPrompt(false);
-        console.log(data);
-      });
+      axios
+        .post("/api/answer", { questionId, answer })
+        .then((res) => {
+          if (res.status === 200) {
+            queryClient.invalidateQueries(["getAnswers", "getQuestion"]);
+            setAnswer("");
+            setAnsPrompt(false);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     } else {
       setError(validationError);
     }
@@ -94,7 +94,7 @@ export default function Answer({ questionId, setAnsPrompt }: Props) {
         type="submit"
         className="bg-blue-700 text-white font-semibold rounded-lg shadow-sm mt-6 h-11"
       >
-        {isLoading ? "Submitting Answer" : "Submit Answer"}
+        {isLoading ? "loading..." : "Submit Answer"}
       </button>
     </form>
   );

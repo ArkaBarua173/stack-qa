@@ -36,7 +36,6 @@ type Props = {
 };
 
 export default function GithubLinkForm({ githubLink }: Props) {
-  const [isLoading, setIsLoading] = useState(false);
   const queryClient = useQueryClient();
   const {
     register,
@@ -49,7 +48,7 @@ export default function GithubLinkForm({ githubLink }: Props) {
     resolver: yupResolver(schema),
   });
 
-  const { mutate } = useMutation(
+  const { mutate, isLoading } = useMutation(
     async (data: FormValues) =>
       await axios.put("/api/profile/updateGithubLink", data),
     {
@@ -57,21 +56,15 @@ export default function GithubLinkForm({ githubLink }: Props) {
         console.log(error);
       },
       onSuccess: async (data: { data: { updatedGithub: Profile } }) => {
-        console.log(data);
         await queryClient.invalidateQueries({
           queryKey: ["getProfile", "getUserProfileById"],
         });
-      },
-      onSettled: () => {
-        setIsLoading(false);
       },
     }
   );
 
   const onSubmit = (data: FormValues) => {
-    setIsLoading(true);
     mutate(data);
-    setIsLoading(false);
   };
 
   return (

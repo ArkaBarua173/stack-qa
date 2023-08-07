@@ -21,12 +21,12 @@ const getQuestionVotes = async (
 export default function Vote({ questionId }: Props) {
   const { data: session } = useSession();
   const queryClient = useQueryClient();
-  const { data: QuestionVotes } = useQuery({
+  const { data: QuestionVotes, isLoading: isDataLoading } = useQuery({
     queryKey: ["QuestionVotes", questionId],
     queryFn: () => getQuestionVotes(questionId),
   });
 
-  const { mutate } = useMutation(
+  const { mutate, isLoading } = useMutation(
     async (data: { questionId: string }) =>
       await axios.post(`/api/vote/questionVotes`, data),
     {
@@ -34,7 +34,6 @@ export default function Vote({ questionId }: Props) {
         console.log(error);
       },
       onSuccess: (data) => {
-        console.log(data);
         queryClient.invalidateQueries(["QuestionVotes"]);
       },
     }
@@ -45,21 +44,24 @@ export default function Vote({ questionId }: Props) {
       {QuestionVotes?.some(
         (vote) => vote.user.email === session?.user?.email
       ) ? (
-        <div
-          className="cursor-pointer inline-block"
+        <button
+          disabled={isLoading}
+          className=" inline-block"
           onClick={() => mutate({ questionId })}
         >
-          <UpvotefillSvg fill="#374151" size="20" />
-        </div>
+          <UpvotefillSvg fill={isLoading ? "#374151" : "#1d4ed8"} size="20" />
+        </button>
       ) : (
-        <div
-          className="cursor-pointer inline-block"
+        <button
+          disabled={isLoading}
+          className=" inline-block"
           onClick={() => mutate({ questionId })}
         >
-          <UpvoteSvg fill="#374151" size="20" />
-        </div>
+          <UpvoteSvg fill={isLoading ? "#374151" : "#1d4ed8"} size="20" />
+        </button>
       )}
       <div className="font-semibold">
+        {isDataLoading && <p className="text-xs">loading...</p>}
         {QuestionVotes?.length}{" "}
         <span className="text-gray-500">
           {QuestionVotes && QuestionVotes?.length === 1 ? "vote" : "votes"}

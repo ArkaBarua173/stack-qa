@@ -6,6 +6,10 @@ import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import QuestionItem from "../components/QuestionItem";
 import { QuestionType } from "@/types";
+import dynamic from "next/dynamic";
+const Loading = dynamic(() => import("@/app/components/Loading"), {
+  ssr: false,
+});
 
 const SearchResults = async (url: string) => {
   const res = await axios.get(`/api/search/?q=${url}`);
@@ -22,13 +26,14 @@ export default function SearchResultsPage() {
     queryFn: () => SearchResults(encodedSearchQuery),
   });
 
-  console.log(data);
-
   return (
     <div>
-      {" "}
       <div>
-        {isLoading && <div className="text-center mt-3">Loading...</div>}
+        {isLoading && (
+          <div className="flex justify-center items-center my-4">
+            <Loading />
+          </div>
+        )}
         {!isLoading && data?.length === 0 && (
           <div className="text-center font-bold">No results found</div>
         )}

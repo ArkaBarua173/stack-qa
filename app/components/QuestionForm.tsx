@@ -35,7 +35,6 @@ const schema = yup.object({
 });
 
 export default function QuestionForm() {
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const queryClient = useQueryClient();
   const {
@@ -54,7 +53,7 @@ export default function QuestionForm() {
     resolver: yupResolver(schema),
   });
 
-  const { mutate } = useMutation(
+  const { mutate, isLoading } = useMutation(
     async (data: FormValues) => await axios.post("/api/question/create", data),
     {
       onError: (error) => {
@@ -63,9 +62,6 @@ export default function QuestionForm() {
       onSuccess: async (data) => {
         await queryClient.invalidateQueries({ queryKey: ["QuestionList"] });
         router.push("/");
-      },
-      onSettled: () => {
-        setIsLoading(false);
       },
     }
   );
@@ -103,8 +99,6 @@ export default function QuestionForm() {
   };
 
   const onSubmit = (data: FormValues): void => {
-    setIsLoading(true);
-    console.log(data);
     mutate(data);
   };
 

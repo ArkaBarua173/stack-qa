@@ -11,6 +11,9 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import Modal from "./Modal";
+const Loading = dynamic(() => import("@/app/components/Loading"), {
+  ssr: false,
+});
 
 type Props = {
   userId: string;
@@ -34,7 +37,7 @@ export default function ActivityToolBar({
   const [isModalVisible, setIsModalVisible] = useState(false);
   const router = useRouter();
   const { data: session } = useSession();
-  const { data } = useQuery({
+  const { data, isLoading: ansLoading } = useQuery({
     queryKey: ["getAnswers", questionId],
     queryFn: () => getAnswers(questionId),
   });
@@ -94,6 +97,11 @@ export default function ActivityToolBar({
       </div>
       {ansPrompt && (
         <AnswerForm questionId={questionId} setAnsPrompt={setAnsPropmt} />
+      )}
+      {ansLoading && (
+        <div className="flex justify-center items-center my-4">
+          <Loading />
+        </div>
       )}
       <div>
         {data?.map((answer) => (

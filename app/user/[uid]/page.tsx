@@ -12,6 +12,9 @@ import dynamic from "next/dynamic";
 const QuestionItem = dynamic(() => import("@/app/components/QuestionItem"), {
   ssr: false,
 });
+const Loading = dynamic(() => import("@/app/components/Loading"), {
+  ssr: false,
+});
 
 type Props = {
   params: {
@@ -29,30 +32,35 @@ const getUserProfileById = async (uid: string): Promise<ReturnProfileType> => {
 };
 
 export default function UserPage({ params: { uid } }: Props) {
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["getUserProfileById", uid],
     queryFn: () => getUserProfileById(uid),
   });
 
-  console.log(data);
-
   return (
     <div className="mt-6">
       <div className="flex justify-center gap-10">
-        <figure>
-          {data?.currentUser?.image ? (
-            <Image
-              src={data?.currentUser?.image}
-              alt="Profile picture"
-              width={150}
-              height={150}
-              priority={true}
-              className="rounded-full shadow-lg"
-            />
-          ) : (
-            <Avatar name={data?.currentUser?.name} size="150" round={true} />
-          )}
-        </figure>
+        {isLoading && (
+          <div className="flex justify-center items-center my-4">
+            <Loading />
+          </div>
+        )}
+        {!isLoading && (
+          <figure>
+            {data?.currentUser?.image ? (
+              <Image
+                src={data?.currentUser?.image}
+                alt="Profile picture"
+                width={150}
+                height={150}
+                priority={true}
+                className="rounded-full shadow-lg"
+              />
+            ) : (
+              <Avatar name={data?.currentUser?.name} size="150" round={true} />
+            )}
+          </figure>
+        )}
         <section className="self-center">
           <h1 className="text-2xl font-semibold text-gray-800">
             {data?.currentUser?.name}
@@ -84,11 +92,15 @@ export default function UserPage({ params: { uid } }: Props) {
           )}
         </section>
       </div>
-      <p className="text-center font-semibold my-6">
-        {data?.currentUser?.questions?.length}{" "}
-        {data?.currentUser?.questions?.length === 1 ? "question" : "questions"}{" "}
-        asked by {data?.currentUser?.name}
-      </p>
+      {!isLoading && (
+        <p className="text-center font-semibold my-6">
+          {data?.currentUser?.questions?.length}{" "}
+          {data?.currentUser?.questions?.length === 1
+            ? "question"
+            : "questions"}{" "}
+          asked by {data?.currentUser?.name}
+        </p>
+      )}
       {data?.currentUser?.questions?.map((question) => (
         <QuestionItem key={question?.id} question={question} />
       ))}

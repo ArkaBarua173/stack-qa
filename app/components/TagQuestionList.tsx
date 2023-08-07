@@ -5,6 +5,9 @@ import dynamic from "next/dynamic";
 const QuestionItem = dynamic(() => import("./QuestionItem"), { ssr: false });
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+const Loading = dynamic(() => import("@/app/components/Loading"), {
+  ssr: false,
+});
 
 type Props = {
   tag: string;
@@ -29,19 +32,23 @@ export default function TagQuestionList({ tag }: Props) {
 
   return (
     <div>
-      {TagQuestionList && (
-        <div className="w-full max-w-6xl my-4 mx-auto">
+      {isLoading && (
+        <div className="flex justify-center items-center my-4">
+          <Loading />
+        </div>
+      )}
+      <div className="w-full max-w-6xl my-4 mx-auto">
+        {!isLoading && (
           <h1 className="font-semibold">
             {TagQuestionList?.data?.length} Questions found by tag &quot;
             {tag}
             &quot;
           </h1>
-          {isLoading && <p className="text-center">Loading...</p>}
-          {TagQuestionList?.data?.map((question) => (
-            <QuestionItem key={question?.id} question={question} />
-          ))}
-        </div>
-      )}
+        )}
+        {TagQuestionList?.data?.map((question) => (
+          <QuestionItem key={question?.id} question={question} />
+        ))}
+      </div>
     </div>
   );
 }

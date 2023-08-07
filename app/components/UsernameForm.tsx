@@ -26,7 +26,6 @@ type Props = {
 
 export default function UsernameForm({ name }: Props) {
   const { data: session, update } = useSession();
-  const [isLoading, setIsLoading] = useState(false);
   const queryClient = useQueryClient();
   const {
     register,
@@ -39,7 +38,7 @@ export default function UsernameForm({ name }: Props) {
     resolver: yupResolver(schema),
   });
 
-  const { mutate } = useMutation(
+  const { mutate, isLoading } = useMutation(
     async (data: FormValues) =>
       await axios.put("/api/profile/updateUsername", data),
     {
@@ -47,21 +46,16 @@ export default function UsernameForm({ name }: Props) {
         console.log(error);
       },
       onSuccess: async (data: { data: { updatedUser: User } }) => {
-        console.log(data);
         await update({
           ...session,
           user: { ...session?.user, name: data?.data?.updatedUser?.name },
         });
         await queryClient.invalidateQueries({ queryKey: ["getProfile"] });
       },
-      onSettled: () => {
-        setIsLoading(false);
-      },
     }
   );
 
   const onSubmit = (data: FormValues) => {
-    setIsLoading(true);
     mutate(data);
   };
 

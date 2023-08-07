@@ -6,8 +6,6 @@ type Props = {
 };
 
 export async function GET(req: Request, { params: { qid } }: Props) {
-  console.log(qid);
-
   try {
     const data = await prisma.vote.findMany({
       where: { questionId: qid },

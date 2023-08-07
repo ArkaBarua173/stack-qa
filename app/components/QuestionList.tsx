@@ -6,6 +6,9 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import dynamic from "next/dynamic";
 import { useSession } from "next-auth/react";
+const Loading = dynamic(() => import("@/app/components/Loading"), {
+  ssr: false,
+});
 
 const getQuestionList = async () => {
   const res = await axios.get(`/api/question/getQuestionList`);
@@ -34,25 +37,27 @@ export default function QuestionList() {
 
   return (
     <div>
-      <div>
-        {isLoading && <div>Loading...</div>}
-        {data?.data?.length === 0 && (
-          <div className="text-center font-semibold">
-            No Questions at the moment
-          </div>
-        )}
-        <div className="text-center mt-3">
-          <button
-            className="bg-blue-600 px-3 py-2 rounded text-white font-semibold"
-            onClick={handleClick}
-          >
-            Ask a Question
-          </button>
+      {data?.data?.length === 0 && (
+        <div className="text-center font-semibold">
+          No Questions at the moment
         </div>
-        {data?.data.map((question) => (
-          <QuestionItem key={question?.id} question={question} />
-        ))}
+      )}
+      <div className="text-center mt-3">
+        <button
+          className="bg-blue-600 px-3 py-2 rounded text-white font-semibold"
+          onClick={handleClick}
+        >
+          Ask a Question
+        </button>
       </div>
+      {isLoading && (
+        <div className="flex justify-center items-center my-4">
+          <Loading />
+        </div>
+      )}
+      {data?.data.map((question) => (
+        <QuestionItem key={question?.id} question={question} />
+      ))}
     </div>
   );
 }

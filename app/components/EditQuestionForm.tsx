@@ -52,7 +52,6 @@ export default function EditQuestionForm({ questionId }: Props) {
       router.back();
     },
   });
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { data: question } = useQuery({
     queryKey: ["getQuestionContent", questionId],
@@ -77,7 +76,7 @@ export default function EditQuestionForm({ questionId }: Props) {
     resolver: yupResolver(schema),
   });
 
-  const { mutate } = useMutation(
+  const { mutate, isLoading } = useMutation(
     async (data: FormValues) =>
       await axios.put(`/api/question/${questionId}`, data),
     {
@@ -94,9 +93,6 @@ export default function EditQuestionForm({ questionId }: Props) {
           ],
         });
         router.back();
-      },
-      onSettled: () => {
-        setIsLoading(false);
       },
     }
   );
@@ -138,8 +134,6 @@ export default function EditQuestionForm({ questionId }: Props) {
   };
 
   const onSubmit = (data: FormValues): void => {
-    setIsLoading(true);
-    console.log(data);
     mutate(data);
   };
 

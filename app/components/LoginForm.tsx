@@ -44,11 +44,8 @@ export default function LoginForm() {
       callbackUrl: "/",
     });
 
-    console.log(status);
-
     if (status?.ok && !status?.error) {
       router.push("/");
-      console.log("success");
       setIsDisabled(false);
     }
 

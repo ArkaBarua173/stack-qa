@@ -4,6 +4,10 @@ import { QuestionType } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import ProfileQandAItem from "./ProfileQandAItem";
+import dynamic from "next/dynamic";
+const Loading = dynamic(() => import("@/app/components/Loading"), {
+  ssr: false,
+});
 
 const getQuestionsBySessionUser = async () => {
   const res = await axios.get(`/api/profile/getQuestionBySessionUser`);
@@ -36,20 +40,26 @@ export default function QAndAContent() {
       queryFn: getAnswersBySessionUser,
     });
 
-  console.log(answers?.data);
-
   return (
     <div className="w-full">
       <div>
         <h1 className="font-medium text-2xl mb-2">Questions</h1>
-        {questionsLoading && <div>Loading...</div>}
+        {questionsLoading && (
+          <div className="my-2">
+            <Loading />
+          </div>
+        )}
         {questions?.data?.map((question) => (
           <ProfileQandAItem key={question?.id} question={question} />
         ))}
       </div>
       <div>
-        <h1 className="font-medium text-2xl">Answers</h1>
-        {answersLoading && <div>Loading...</div>}
+        <h1 className="font-medium text-2xl mb-2">Answers</h1>
+        {answersLoading && (
+          <div className="my-2">
+            <Loading />
+          </div>
+        )}
         {answers?.data?.map((question) => (
           <ProfileQandAItem
             key={question?.question?.id}

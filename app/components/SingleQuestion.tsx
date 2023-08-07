@@ -14,6 +14,9 @@ import dynamic from "next/dynamic";
 import { Inter } from "next/font/google";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+const Loading = dynamic(() => import("@/app/components/Loading"), {
+  ssr: false,
+});
 
 type Props = {
   id: string;
@@ -28,7 +31,7 @@ const getQuestion = async (id: string) => {
 
 export default function SingleQuestion({ id }: Props) {
   const [ansPrompt, setAnsPrompt] = useState(false);
-  const { data: question } = useQuery({
+  const { data: question, isLoading } = useQuery({
     queryKey: ["getQuestion", id],
     queryFn: () => getQuestion(id),
   });
@@ -40,6 +43,11 @@ export default function SingleQuestion({ id }: Props) {
   return (
     <div>
       <div className="shadow rounded-lg p-8 space-y-3 w-full max-w-6xl my-8 mx-auto bg-slate-200">
+        {isLoading && (
+          <div className="flex justify-center items-center my-4">
+            <Loading />
+          </div>
+        )}
         <h1 className="text-2xl font-semibold text-gray-800">
           {question?.title}
         </h1>

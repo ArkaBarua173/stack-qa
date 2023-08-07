@@ -6,6 +6,9 @@ import axios from "axios";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 const Avatar = dynamic(() => import("react-avatar"), { ssr: false });
+const Loading = dynamic(() => import("@/app/components/Loading"), {
+  ssr: false,
+});
 
 type ReturnProfileType = {
   currentUser: ProfileType;
@@ -16,35 +19,36 @@ const getUserProfile = async (): Promise<ReturnProfileType> => {
   return res.data;
 };
 export default function ProfileContent() {
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["getUserProfile"],
     queryFn: getUserProfile,
   });
 
-  console.log(data);
-
   return (
     <div className="mx-20 my-10">
       <div className="flex gap-6">
-        <figure className="">
-          {data?.currentUser?.image ? (
-            <Image
-              src={data?.currentUser?.image}
-              alt="Profile picture"
-              width={60}
-              height={60}
-              priority={true}
-              className="rounded-full shadow-md"
-            />
-          ) : (
-            <Avatar
-              name={data?.currentUser?.name as string}
-              size="60"
-              round={true}
-              className="font-medium"
-            />
-          )}
-        </figure>
+        {isLoading && <Loading />}
+        {!isLoading && (
+          <figure className="">
+            {data?.currentUser?.image ? (
+              <Image
+                src={data?.currentUser?.image}
+                alt="Profile picture"
+                width={60}
+                height={60}
+                priority={true}
+                className="rounded-full shadow-md"
+              />
+            ) : (
+              <Avatar
+                name={data?.currentUser?.name as string}
+                size="60"
+                round={true}
+                className="font-medium"
+              />
+            )}
+          </figure>
+        )}
         <div>
           <h1 className="text-2xl font-semibold text-gray-800">
             {data?.currentUser?.name}

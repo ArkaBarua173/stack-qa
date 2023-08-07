@@ -49,7 +49,7 @@ export default function Answer({ questionId, setAnsPrompt }: Props) {
     const validationError = validateForm();
     if (Object.keys(validationError).length === 0) {
       setError({});
-      fetch("http://localhost:3000/api/answer", {
+      fetch(`${process.env.BASE_URL}/api/answer`, {
         method: "POST",
         body: JSON.stringify({
           questionId,

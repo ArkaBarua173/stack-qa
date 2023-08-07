@@ -17,7 +17,7 @@ type TagQuestionListType = {
 const getTagQuestionList = async (
   tag: string
 ): Promise<TagQuestionListType> => {
-  const res = await axios.get(`http://localhost:3000/api/tag/${tag}`);
+  const res = await axios.get(`/api/tag/${tag}`);
   return res.data;
 };
 

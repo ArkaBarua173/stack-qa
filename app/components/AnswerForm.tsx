@@ -17,6 +17,7 @@ type Props = {
 
 export default function Answer({ questionId, setAnsPrompt }: Props) {
   const queryClient = useQueryClient();
+  const [isLoading, setIsLoading] = useState(false);
   const [answer, setAnswer] = useState("");
   const [error, setError] = useState<Partial<FormValues>>({});
 
@@ -45,6 +46,7 @@ export default function Answer({ questionId, setAnsPrompt }: Props) {
   };
 
   const onAnswerSubmit = (e: FormEvent<HTMLFormElement>): void => {
+    setIsLoading(true);
     e.preventDefault();
     const validationError = validateForm();
     if (Object.keys(validationError).length === 0) {
@@ -65,6 +67,7 @@ export default function Answer({ questionId, setAnsPrompt }: Props) {
     } else {
       setError(validationError);
     }
+    setIsLoading(false);
   };
 
   const validateForm = () => {
@@ -91,7 +94,7 @@ export default function Answer({ questionId, setAnsPrompt }: Props) {
         type="submit"
         className="bg-blue-700 text-white font-semibold rounded-lg shadow-sm mt-6 h-11"
       >
-        Submit Answer
+        {isLoading ? "Submitting Answer" : "Submit Answer"}
       </button>
     </form>
   );
